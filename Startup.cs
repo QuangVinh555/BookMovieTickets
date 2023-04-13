@@ -38,6 +38,7 @@ namespace BookMovieTickets
 
             // add interface
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ITypeLoginRepository, TypeLoginRepository>();
 
             services.AddSwaggerGen(c =>
             {

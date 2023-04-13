@@ -1,4 +1,5 @@
 using BookMovieTickets.Data;
+using BookMovieTickets.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,7 +34,11 @@ namespace BookMovieTickets
             // ADD DATABASE
             services.AddDbContext<BookMovieTicketsContext>(option => 
                 option.UseSqlServer(Configuration.GetConnectionString("BookMovieTickets"))
-            ); 
+            );
+
+            // add interface
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMovieTickets", Version = "v1" });

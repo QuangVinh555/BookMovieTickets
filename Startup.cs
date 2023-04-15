@@ -45,6 +45,7 @@ namespace BookMovieTickets
             services.AddScoped<IRankUserRepository, RankUserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ITypeCinemaRepository, TypeCinemaRepository>();
 
             services.AddSwaggerGen(c =>
             {

@@ -45,5 +45,18 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTypeCinema(TypeCinemaDTO dto, int id)
+        {
+            try
+            {
+                return Ok(_typeCinemaRepository.UpdateTypeCinema(dto, id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

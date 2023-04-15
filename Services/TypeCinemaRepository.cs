@@ -21,7 +21,8 @@ namespace BookMovieTickets.Services
         {
             var _typeCinema = new CinemaType
             {
-                Name = dto.Name
+                Name = dto.Name,
+                Logo = dto.Logo
             };
             _context.Add(_typeCinema);
             _context.SaveChanges();
@@ -31,7 +32,8 @@ namespace BookMovieTickets.Services
                 Data = new TypeCinemaVM
                 {
                     Id = _typeCinema.Id,
-                    Name = _typeCinema.Name
+                    Name = _typeCinema.Name,
+                    Logo = _typeCinema.Logo                  
                 }
             };
         }
@@ -44,10 +46,39 @@ namespace BookMovieTickets.Services
                 Data = new TypeCinemaVM
                 {
                     Id = x.Id,
-                    Name = x.Name
+                    Name = x.Name,
+                    Logo = x.Logo
                 }
             }).ToList();
             return _listTypeCinemas;
+        }
+
+        public MessageVM UpdateTypeCinema(TypeCinemaDTO dto, int id)
+        {
+            var _typeCinema = _context.CinemaTypes.Where(x => x.Id == id).SingleOrDefault();
+            if(_typeCinema != null)
+            {
+                _typeCinema.Name = dto.Name;
+                _typeCinema.Logo = dto.Logo;
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Cập nhật thông tin thành công",
+                    Data = new TypeCinemaVM
+                    {
+                        Id = _typeCinema.Id,
+                        Name = _typeCinema.Name,
+                        Logo = _typeCinema.Logo
+                    }
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy thông tin Id này"
+                };
+            }
         }
     }
 }

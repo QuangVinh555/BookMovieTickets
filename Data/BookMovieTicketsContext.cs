@@ -44,7 +44,9 @@ namespace BookMovieTickets.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            if (!optionsBuilder.IsConfigured)
+            {
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -253,6 +255,11 @@ namespace BookMovieTickets.Data
                 entity.ToTable("Cinema_Type");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Logo)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("logo");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(250)

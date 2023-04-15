@@ -1,5 +1,6 @@
 using BookMovieTickets.Data;
 using BookMovieTickets.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,10 +10,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BookMovieTickets
@@ -40,10 +43,32 @@ namespace BookMovieTickets
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ITypeLoginRepository, TypeLoginRepository>();
             services.AddScoped<IRankUserRepository, RankUserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMovieTickets", Version = "v1" });
+            });
+
+            // JWT
+            var secretKey = Configuration["Jwt:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                //options.RequireHttpsMetadata = false;
+                //options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    //auto provide token
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+
+                    //sign the token
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                    ClockSkew = TimeSpan.Zero
+                };
             });
         }
 

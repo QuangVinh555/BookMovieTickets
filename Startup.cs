@@ -44,6 +44,7 @@ namespace BookMovieTickets
             services.AddScoped<ITypeLoginRepository, TypeLoginRepository>();
             services.AddScoped<IRankUserRepository, RankUserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -85,6 +86,8 @@ namespace BookMovieTickets
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

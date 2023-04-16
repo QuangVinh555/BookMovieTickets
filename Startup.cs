@@ -1,4 +1,4 @@
-using BookMovieTickets.Data;
+﻿using BookMovieTickets.Data;
 using BookMovieTickets.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -73,6 +73,16 @@ namespace BookMovieTickets
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            // Xác thực Google
+            services.AddAuthentication()
+                .AddGoogle(option =>
+                {
+                    var gConfig = Configuration.GetSection("Authentication:Google");
+                    option.ClientId = gConfig["ClientId"];
+                    option.ClientSecret = gConfig["ClientSecret"];
+                    //option.CallbackPath = "/api/tokengoogle";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

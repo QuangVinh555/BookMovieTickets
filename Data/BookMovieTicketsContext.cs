@@ -17,10 +17,8 @@ namespace BookMovieTickets.Data
         {
         }
 
-        public virtual DbSet<Actor> Actors { get; set; }
         public virtual DbSet<Banner> Banners { get; set; }
         public virtual DbSet<BookTicket> BookTickets { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Chair> Chairs { get; set; }
         public virtual DbSet<ChairType> ChairTypes { get; set; }
         public virtual DbSet<CinemaName> CinemaNames { get; set; }
@@ -30,12 +28,8 @@ namespace BookMovieTickets.Data
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<LoginType> LoginTypes { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
-        public virtual DbSet<MovieActor> MovieActors { get; set; }
-        public virtual DbSet<MovieCategory> MovieCategories { get; set; }
-        public virtual DbSet<MovieProducer> MovieProducers { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
-        public virtual DbSet<Producer> Producers { get; set; }
         public virtual DbSet<Raiting> Raitings { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<ShowTime> ShowTimes { get; set; }
@@ -46,25 +40,13 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<Actor>(entity =>
-            {
-                entity.ToTable("Actor");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Gender).HasColumnName("gender");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(200)
-                    .HasColumnName("name");
-            });
 
             modelBuilder.Entity<Banner>(entity =>
             {
@@ -146,17 +128,6 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Book_Tick__user___00200768");
-            });
-
-            modelBuilder.Entity<Category>(entity =>
-            {
-                entity.ToTable("Category");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(250)
-                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<Chair>(entity =>
@@ -329,12 +300,20 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Actor)
+                    .HasMaxLength(255)
+                    .HasColumnName("actor");
+
                 entity.Property(e => e.Author)
                     .HasMaxLength(100)
                     .HasColumnName("author");
 
+                entity.Property(e => e.Category)
+                    .HasMaxLength(255)
+                    .HasColumnName("category");
+
                 entity.Property(e => e.Content)
-                    .HasMaxLength(1)
+                    .HasMaxLength(2000)
                     .HasColumnName("content");
 
                 entity.Property(e => e.CreatedAt)
@@ -347,12 +326,10 @@ namespace BookMovieTickets.Data
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Description)
-                    .HasMaxLength(1)
+                    .HasMaxLength(2000)
                     .HasColumnName("description");
 
-                entity.Property(e => e.MovieDuration)
-                    .HasColumnType("datetime")
-                    .HasColumnName("movie_duration");
+                entity.Property(e => e.MovieDuration).HasColumnName("movie_duration");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(250)
@@ -366,9 +343,11 @@ namespace BookMovieTickets.Data
                     .HasColumnType("datetime")
                     .HasColumnName("premiere_date");
 
-                entity.Property(e => e.PremiereYear)
-                    .HasColumnType("datetime")
-                    .HasColumnName("premiere_year");
+                entity.Property(e => e.PremiereYear).HasColumnName("premiere_year");
+
+                entity.Property(e => e.Producer)
+                    .HasMaxLength(255)
+                    .HasColumnName("producer");
 
                 entity.Property(e => e.Stamp)
                     .HasMaxLength(100)
@@ -386,73 +365,6 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.Movies)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Movie__user_id__7F2BE32F");
-            });
-
-            modelBuilder.Entity<MovieActor>(entity =>
-            {
-                entity.ToTable("Movie_Actor");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.ActorId).HasColumnName("actor_id");
-
-                entity.Property(e => e.MovieId).HasColumnName("movie_id");
-
-                entity.Property(e => e.Role)
-                    .HasMaxLength(200)
-                    .HasColumnName("role");
-
-                entity.HasOne(d => d.Actor)
-                    .WithMany(p => p.MovieActors)
-                    .HasForeignKey(d => d.ActorId)
-                    .HasConstraintName("FK__Movie_Act__actor__7C4F7684");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.MovieActors)
-                    .HasForeignKey(d => d.MovieId)
-                    .HasConstraintName("FK__Movie_Act__movie__7B5B524B");
-            });
-
-            modelBuilder.Entity<MovieCategory>(entity =>
-            {
-                entity.ToTable("Movie_Category");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CategoryId).HasColumnName("category_id");
-
-                entity.Property(e => e.MovieId).HasColumnName("movie_id");
-
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.MovieCategories)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK__Movie_Cat__categ__787EE5A0");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.MovieCategories)
-                    .HasForeignKey(d => d.MovieId)
-                    .HasConstraintName("FK__Movie_Cat__movie__778AC167");
-            });
-
-            modelBuilder.Entity<MovieProducer>(entity =>
-            {
-                entity.ToTable("Movie_Producer");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.MovieId).HasColumnName("movie_id");
-
-                entity.Property(e => e.ProducerId).HasColumnName("producer_id");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.MovieProducers)
-                    .HasForeignKey(d => d.MovieId)
-                    .HasConstraintName("FK__Movie_Pro__movie__7E37BEF6");
-
-                entity.HasOne(d => d.Producer)
-                    .WithMany(p => p.MovieProducers)
-                    .HasForeignKey(d => d.ProducerId)
-                    .HasConstraintName("FK__Movie_Pro__produ__7D439ABD");
             });
 
             modelBuilder.Entity<News>(entity =>
@@ -491,17 +403,6 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.PaymentType)
                     .HasMaxLength(250)
                     .HasColumnName("payment_type");
-            });
-
-            modelBuilder.Entity<Producer>(entity =>
-            {
-                entity.ToTable("Producer");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(200)
-                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<Raiting>(entity =>
@@ -548,11 +449,17 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.CinemaNameId).HasColumnName("cinema_name_id");
+
                 entity.Property(e => e.CinemaRoomId).HasColumnName("cinema_room_id");
+
+                entity.Property(e => e.CinemaTypeId).HasColumnName("cinema_type_id");
 
                 entity.Property(e => e.Deleted)
                     .HasColumnName("deleted")
                     .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.LocationId).HasColumnName("location_id");
 
                 entity.Property(e => e.MovieId).HasColumnName("movie_id");
 
@@ -572,10 +479,25 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 
+                entity.HasOne(d => d.CinemaName)
+                    .WithMany(p => p.ShowTimes)
+                    .HasForeignKey(d => d.CinemaNameId)
+                    .HasConstraintName("FK__Show_Time__cinem__29221CFB");
+
                 entity.HasOne(d => d.CinemaRoom)
                     .WithMany(p => p.ShowTimes)
                     .HasForeignKey(d => d.CinemaRoomId)
                     .HasConstraintName("FK__Show_Time__cinem__05D8E0BE");
+
+                entity.HasOne(d => d.CinemaType)
+                    .WithMany(p => p.ShowTimes)
+                    .HasForeignKey(d => d.CinemaTypeId)
+                    .HasConstraintName("FK__Show_Time__cinem__282DF8C2");
+
+                entity.HasOne(d => d.Location)
+                    .WithMany(p => p.ShowTimes)
+                    .HasForeignKey(d => d.LocationId)
+                    .HasConstraintName("FK__Show_Time__locat__2739D489");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowTimes)

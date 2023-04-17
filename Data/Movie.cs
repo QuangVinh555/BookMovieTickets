@@ -12,9 +12,6 @@ namespace BookMovieTickets.Data
             Banners = new HashSet<Banner>();
             BookTickets = new HashSet<BookTicket>();
             Comments = new HashSet<Comment>();
-            MovieActors = new HashSet<MovieActor>();
-            MovieCategories = new HashSet<MovieCategory>();
-            MovieProducers = new HashSet<MovieProducer>();
             Raitings = new HashSet<Raiting>();
             ShowTimes = new HashSet<ShowTime>();
         }
@@ -26,21 +23,21 @@ namespace BookMovieTickets.Data
         public string Content { get; set; }
         public string Stamp { get; set; }
         public string Nation { get; set; }
-        public DateTime? PremiereYear { get; set; }
-        public DateTime? MovieDuration { get; set; }
+        public int? PremiereYear { get; set; }
+        public int? MovieDuration { get; set; }
         public DateTime? PremiereDate { get; set; }
         public string Author { get; set; }
         public bool? Deleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string Producer { get; set; }
+        public string Actor { get; set; }
+        public string Category { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Banner> Banners { get; set; }
         public virtual ICollection<BookTicket> BookTickets { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<MovieActor> MovieActors { get; set; }
-        public virtual ICollection<MovieCategory> MovieCategories { get; set; }
-        public virtual ICollection<MovieProducer> MovieProducers { get; set; }
         public virtual ICollection<Raiting> Raitings { get; set; }
         public virtual ICollection<ShowTime> ShowTimes { get; set; }
     }

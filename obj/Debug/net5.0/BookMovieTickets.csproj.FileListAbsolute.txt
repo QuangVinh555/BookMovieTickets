@@ -1,4 +1,5 @@
 D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\backend\BookMovieTickets\BookMovieTickets\bin\Debug\net5.0\appsettings.Development.json
+D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\backend\BookMovieTickets\BookMovieTickets\bin\Debug\net5.0\appsettings.json
 D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\backend\BookMovieTickets\BookMovieTickets\bin\Debug\net5.0\BookMovieTickets.exe
 D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\backend\BookMovieTickets\BookMovieTickets\bin\Debug\net5.0\BookMovieTickets.deps.json
 D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\backend\BookMovieTickets\BookMovieTickets\bin\Debug\net5.0\BookMovieTickets.runtimeconfig.json

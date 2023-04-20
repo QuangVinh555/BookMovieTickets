@@ -27,12 +27,12 @@ namespace BookMovieTickets.Data
         public int? MovieDuration { get; set; }
         public DateTime? PremiereDate { get; set; }
         public string Author { get; set; }
-        public string Producer { get; set; }
-        public string Actor { get; set; }
-        public string Category { get; set; }
         public bool? Deleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string Producer { get; set; }
+        public string Actor { get; set; }
+        public string Category { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Banner> Banners { get; set; }

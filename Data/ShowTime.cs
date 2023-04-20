@@ -10,6 +10,7 @@ namespace BookMovieTickets.Data
         public ShowTime()
         {
             BookTickets = new HashSet<BookTicket>();
+            HourTimes = new HashSet<HourTime>();
         }
 
         public int Id { get; set; }
@@ -31,5 +32,6 @@ namespace BookMovieTickets.Data
         public virtual Location Location { get; set; }
         public virtual Movie Movie { get; set; }
         public virtual ICollection<BookTicket> BookTickets { get; set; }
+        public virtual ICollection<HourTime> HourTimes { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace BookMovieTickets.Data
         public virtual DbSet<CinemaRoom> CinemaRooms { get; set; }
         public virtual DbSet<CinemaType> CinemaTypes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<HourTime> HourTimes { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<LoginType> LoginTypes { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
@@ -34,6 +35,7 @@ namespace BookMovieTickets.Data
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<ShowTime> ShowTimes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserPoint> UserPoints { get; set; }
         public virtual DbSet<UserRank> UserRanks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -270,6 +272,30 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Comments__user_i__0C85DE4D");
+            });
+
+            modelBuilder.Entity<HourTime>(entity =>
+            {
+                entity.ToTable("Hour_Time");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.EndTime)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("end_time");
+
+                entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
+
+                entity.Property(e => e.Time)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("time");
+
+                entity.HasOne(d => d.ShowTime)
+                    .WithMany(p => p.HourTimes)
+                    .HasForeignKey(d => d.ShowTimeId)
+                    .HasConstraintName("FK__Hour_Time__show___41EDCAC5");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -511,10 +537,6 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.AccumulatedPoints)
-                    .HasColumnName("accumulated_points")
-                    .HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.Address)
                     .HasMaxLength(250)
                     .HasColumnName("address");
@@ -556,10 +578,6 @@ namespace BookMovieTickets.Data
                     .IsUnicode(false)
                     .HasColumnName("phone_number");
 
-                entity.Property(e => e.RewardPoints)
-                    .HasColumnName("reward_points")
-                    .HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.RoleId)
                     .HasColumnName("role_id")
                     .HasDefaultValueSql("((1))");
@@ -587,6 +605,32 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.UserRankId)
                     .HasConstraintName("FK__User__user_rank___0E6E26BF");
+            });
+
+            modelBuilder.Entity<UserPoint>(entity =>
+            {
+                entity.ToTable("User_Points");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AccumulatedPoints)
+                    .HasColumnName("accumulated_points")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RewardPoints)
+                    .HasColumnName("reward_points")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RewardPointsUsed)
+                    .HasColumnName("reward_points_used")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserPoints)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__User_Poin__user___3F115E1A");
             });
 
             modelBuilder.Entity<UserRank>(entity =>

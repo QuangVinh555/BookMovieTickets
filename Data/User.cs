@@ -13,6 +13,7 @@ namespace BookMovieTickets.Data
             Comments = new HashSet<Comment>();
             Movies = new HashSet<Movie>();
             Raitings = new HashSet<Raiting>();
+            UserPoints = new HashSet<UserPoint>();
         }
 
         public int Id { get; set; }
@@ -25,8 +26,6 @@ namespace BookMovieTickets.Data
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string Password { get; set; }
-        public int? AccumulatedPoints { get; set; }
-        public int? RewardPoints { get; set; }
         public bool? Deleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -38,5 +37,6 @@ namespace BookMovieTickets.Data
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Movie> Movies { get; set; }
         public virtual ICollection<Raiting> Raitings { get; set; }
+        public virtual ICollection<UserPoint> UserPoints { get; set; }
     }
 }

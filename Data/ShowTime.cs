@@ -21,6 +21,7 @@ namespace BookMovieTickets.Data
         public int? NumTicket { get; set; }
         public bool? Deleted { get; set; }
         public string Role { get; set; }
+        public bool? State { get; set; }
 
         public virtual CinemaRoom CinemaRoom { get; set; }
         public virtual Movie Movie { get; set; }

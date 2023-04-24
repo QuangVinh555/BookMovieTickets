@@ -23,6 +23,8 @@ namespace BookMovieTickets.Data
         public double? TotalPrice { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool? State { get; set; }
+
         public virtual Movie Movie { get; set; }
         public virtual Payment Payment { get; set; }
         public virtual ShowTime ShowTime { get; set; }

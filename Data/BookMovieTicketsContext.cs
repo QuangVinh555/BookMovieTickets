@@ -43,7 +43,8 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=VOQUANGVINH\\SQLEXPRESS01;Initial Catalog=BookMovieTickets;User ID=sa; Password=Abc12345@");
             }
         }
 
@@ -91,6 +92,8 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.RewardPoints).HasColumnName("reward_points");
 
                 entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
+
+                entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TicketCount).HasColumnName("ticket_count");
 
@@ -509,6 +512,8 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.ShowDate)
                     .HasColumnType("datetime")
                     .HasColumnName("show_date");
+
+                entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 

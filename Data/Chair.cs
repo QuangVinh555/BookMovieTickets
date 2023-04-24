@@ -9,7 +9,7 @@ namespace BookMovieTickets.Data
     {
         public Chair()
         {
-            BookTickets = new HashSet<BookTicket>();
+            BookTicketDetails = new HashSet<BookTicketDetail>();
         }
 
         public int Id { get; set; }
@@ -20,6 +20,6 @@ namespace BookMovieTickets.Data
 
         public virtual ChairType ChairType { get; set; }
         public virtual CinemaRoom CinemaRoom { get; set; }
-        public virtual ICollection<BookTicket> BookTickets { get; set; }
+        public virtual ICollection<BookTicketDetail> BookTicketDetails { get; set; }
     }
 }

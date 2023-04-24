@@ -19,6 +19,7 @@ namespace BookMovieTickets.Data
 
         public virtual DbSet<Banner> Banners { get; set; }
         public virtual DbSet<BookTicket> BookTickets { get; set; }
+        public virtual DbSet<BookTicketDetail> BookTicketDetails { get; set; }
         public virtual DbSet<Chair> Chairs { get; set; }
         public virtual DbSet<ChairType> ChairTypes { get; set; }
         public virtual DbSet<CinemaName> CinemaNames { get; set; }
@@ -78,8 +79,6 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.ChairId).HasColumnName("chair_id");
-
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("created_at")
@@ -106,11 +105,6 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.Chair)
-                    .WithMany(p => p.BookTickets)
-                    .HasForeignKey(d => d.ChairId)
-                    .HasConstraintName("FK__Book_Tick__chair__09A971A2");
-
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.MovieId)
@@ -130,6 +124,29 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Book_Tick__user___00200768");
+            });
+
+            modelBuilder.Entity<BookTicketDetail>(entity =>
+            {
+                entity.ToTable("Book_Ticket_Detail");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.BookTicketId).HasColumnName("book_ticket_id");
+
+                entity.Property(e => e.ChairId).HasColumnName("chair_id");
+
+                entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
+
+                entity.HasOne(d => d.BookTicket)
+                    .WithMany(p => p.BookTicketDetails)
+                    .HasForeignKey(d => d.BookTicketId)
+                    .HasConstraintName("FK__Book_Tick__book___4F47C5E3");
+
+                entity.HasOne(d => d.Chair)
+                    .WithMany(p => p.BookTicketDetails)
+                    .HasForeignKey(d => d.ChairId)
+                    .HasConstraintName("FK__Book_Tick__chair__531856C7");
             });
 
             modelBuilder.Entity<Chair>(entity =>
@@ -475,17 +492,11 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CinemaNameId).HasColumnName("cinema_name_id");
-
                 entity.Property(e => e.CinemaRoomId).HasColumnName("cinema_room_id");
-
-                entity.Property(e => e.CinemaTypeId).HasColumnName("cinema_type_id");
 
                 entity.Property(e => e.Deleted)
                     .HasColumnName("deleted")
                     .HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.LocationId).HasColumnName("location_id");
 
                 entity.Property(e => e.MovieId).HasColumnName("movie_id");
 
@@ -499,31 +510,12 @@ namespace BookMovieTickets.Data
                     .HasColumnType("datetime")
                     .HasColumnName("show_date");
 
-                entity.Property(e => e.ShowTime1)
-                    .HasColumnType("datetime")
-                    .HasColumnName("show_time");
-
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
-
-                entity.HasOne(d => d.CinemaName)
-                    .WithMany(p => p.ShowTimes)
-                    .HasForeignKey(d => d.CinemaNameId)
-                    .HasConstraintName("FK__Show_Time__cinem__29221CFB");
 
                 entity.HasOne(d => d.CinemaRoom)
                     .WithMany(p => p.ShowTimes)
                     .HasForeignKey(d => d.CinemaRoomId)
                     .HasConstraintName("FK__Show_Time__cinem__05D8E0BE");
-
-                entity.HasOne(d => d.CinemaType)
-                    .WithMany(p => p.ShowTimes)
-                    .HasForeignKey(d => d.CinemaTypeId)
-                    .HasConstraintName("FK__Show_Time__cinem__282DF8C2");
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.ShowTimes)
-                    .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Show_Time__locat__2739D489");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowTimes)

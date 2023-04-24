@@ -66,8 +66,6 @@ namespace BookMovieTickets.Services
             _user.PhoneNumber = dto.PhoneNumber;
             _user.Address = dto.Address;
             _user.Password = passwordEncoding;
-            _user.AccumulatedPoints = dto.AccumulatedPoints;
-            _user.RewardPoints = dto.RewardPoints;
             _context.Add(_user);
             _context.SaveChanges();
             return new MessageVM
@@ -85,8 +83,6 @@ namespace BookMovieTickets.Services
                     PhoneNumber = _user.PhoneNumber,
                     Address = _user.Address,
                     Password = _user.Password,
-                    AccumulatedPoints = _user.AccumulatedPoints,
-                    RewardPoints = _user.RewardPoints
                 }
             };
         }
@@ -134,8 +130,6 @@ namespace BookMovieTickets.Services
                     PhoneNumber = x.PhoneNumber,
                     Address = x.Address,
                     Password = x.Password,
-                    AccumulatedPoints = x.AccumulatedPoints,
-                    RewardPoints = x.RewardPoints
 
                 }
             }).ToList();
@@ -162,8 +156,6 @@ namespace BookMovieTickets.Services
                         PhoneNumber = _user.PhoneNumber,
                         Address = _user.Address,
                         Password = _user.Password,
-                        AccumulatedPoints = _user.AccumulatedPoints,
-                        RewardPoints = _user.RewardPoints
                     }
                 };
             }
@@ -218,8 +210,6 @@ namespace BookMovieTickets.Services
                 _user.PhoneNumber = dto.PhoneNumber;
                 _user.Address = dto.Address;
                 _user.Password = passwordEncoding;
-                _user.AccumulatedPoints = dto.AccumulatedPoints;
-                _user.RewardPoints = dto.RewardPoints;
                 _context.SaveChanges();
                 return new MessageVM
                 {
@@ -236,8 +226,6 @@ namespace BookMovieTickets.Services
                         PhoneNumber = _user.PhoneNumber,
                         Address = _user.Address,
                         Password = _user.Password,
-                        AccumulatedPoints = _user.AccumulatedPoints,
-                        RewardPoints = _user.RewardPoints
                     }
                 };
             }

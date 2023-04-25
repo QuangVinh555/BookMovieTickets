@@ -132,7 +132,7 @@ namespace BookMovieTickets.Services
                 _context.SaveChanges();
                 return new MessageVM
                 {
-                    Message = "Tên này đã tồn tại",
+                    Message = "Cập nhật phòng chiếu thành công",
                     Data = new CinemaRoomVM
                     {
                         Id = _cinemaRoom.Id,

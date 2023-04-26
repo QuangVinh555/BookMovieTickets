@@ -25,6 +25,7 @@ namespace BookMovieTickets.Data
         public virtual DbSet<CinemaName> CinemaNames { get; set; }
         public virtual DbSet<CinemaRoom> CinemaRooms { get; set; }
         public virtual DbSet<CinemaType> CinemaTypes { get; set; }
+        public virtual DbSet<Combo> Combos { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<HourTime> HourTimes { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -43,7 +44,7 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-  
+
             }
         }
 
@@ -138,6 +139,10 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.ChairId).HasColumnName("chair_id");
 
+                entity.Property(e => e.ComboId).HasColumnName("combo_id");
+
+                entity.Property(e => e.CountCombo).HasColumnName("count_combo");
+
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 
                 entity.HasOne(d => d.BookTicket)
@@ -149,6 +154,11 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTicketDetails)
                     .HasForeignKey(d => d.ChairId)
                     .HasConstraintName("FK__Book_Tick__chair__531856C7");
+
+                entity.HasOne(d => d.Combo)
+                    .WithMany(p => p.BookTicketDetails)
+                    .HasForeignKey(d => d.ComboId)
+                    .HasConstraintName("FK__Book_Tick__combo__7A3223E8");
             });
 
             modelBuilder.Entity<Chair>(entity =>
@@ -260,6 +270,43 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.Name)
                     .HasMaxLength(250)
                     .HasColumnName("name");
+            });
+
+            modelBuilder.Entity<Combo>(entity =>
+            {
+                entity.ToTable("Combo");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Count).HasColumnName("count");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.EndTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("end_time");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(250)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Price).HasColumnName("price");
+
+                entity.Property(e => e.StartTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("start_time");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updated_at")
+                    .HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<Comment>(entity =>

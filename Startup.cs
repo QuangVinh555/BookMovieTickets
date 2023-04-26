@@ -50,6 +50,7 @@ namespace BookMovieTickets
             services.AddScoped<ICinemaRoomRepository, CinemaRoomRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IShowTimeRepository, ShowTimeRepository>();
+            services.AddScoped<IHourTimeRepository, HourTimeRepository>();
 
             services.AddSwaggerGen(c =>
             {

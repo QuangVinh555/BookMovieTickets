@@ -43,6 +43,7 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+  
             }
         }
 
@@ -159,6 +160,10 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.ChairTypeId).HasColumnName("chair_type_id");
 
                 entity.Property(e => e.CinemaRoomId).HasColumnName("cinema_room_id");
+
+                entity.Property(e => e.Deleted)
+                    .HasColumnName("deleted")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)

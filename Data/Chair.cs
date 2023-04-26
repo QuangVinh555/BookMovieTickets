@@ -17,6 +17,7 @@ namespace BookMovieTickets.Data
         public int? ChairTypeId { get; set; }
         public string Name { get; set; }
         public int? Status { get; set; }
+        public bool? Deleted { get; set; }
 
         public virtual ChairType ChairType { get; set; }
         public virtual CinemaRoom CinemaRoom { get; set; }

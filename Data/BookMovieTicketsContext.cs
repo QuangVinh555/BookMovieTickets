@@ -44,7 +44,6 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-
             }
         }
 
@@ -284,6 +283,10 @@ namespace BookMovieTickets.Data
                     .HasColumnType("datetime")
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Deleted)
+                    .HasColumnName("deleted")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)

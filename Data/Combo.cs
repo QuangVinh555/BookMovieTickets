@@ -21,6 +21,7 @@ namespace BookMovieTickets.Data
         public DateTime? EndTime { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool? Deleted { get; set; }
 
         public virtual ICollection<BookTicketDetail> BookTicketDetails { get; set; }
     }

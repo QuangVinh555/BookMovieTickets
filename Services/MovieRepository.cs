@@ -50,6 +50,7 @@ namespace BookMovieTickets.Services
             _movie.Author = dto.Author;
             _movie.Actor = dto.Actor;
             _movie.Producer = dto.Producer;
+            _movie.Category = dto.Category;
             _context.Add(_movie);
             _context.SaveChanges();
             return new MessageVM { 
@@ -68,7 +69,8 @@ namespace BookMovieTickets.Services
                     PremiereYear = _movie.PremiereYear,
                     Author = _movie.Author,
                     Actor = _movie.Actor,
-                    Producer = _movie.Producer
+                    Producer = _movie.Producer,
+                    Category = _movie.Category
                 }
             };
         }
@@ -97,7 +99,8 @@ namespace BookMovieTickets.Services
                     PremiereYear = x.PremiereYear,
                     Author = x.Author,
                     Actor = x.Actor,
-                    Producer = x.Producer
+                    Producer = x.Producer,
+                    Category = x.Category
                 }
             }).ToList();
             return _listMovies;
@@ -125,7 +128,8 @@ namespace BookMovieTickets.Services
                         PremiereYear = _movie.PremiereYear,
                         Author = _movie.Author,
                         Actor = _movie.Actor,
-                        Producer = _movie.Producer
+                        Producer = _movie.Producer,
+                        Category = _movie.Category
                     }
                 };
             }
@@ -141,7 +145,6 @@ namespace BookMovieTickets.Services
         public MessageVM UpdateMovie(MovieDTO dto, int id)
         {
             var _movie = _context.Movies.Where(x => x.Id == id).SingleOrDefault();
-            var _listMovies = _context.Movies.ToList();
             var _user = _context.Users.Where(x => x.Id == dto.UserId).SingleOrDefault();
             if (_user.RoleId != 1)
             {
@@ -149,17 +152,7 @@ namespace BookMovieTickets.Services
                 {
                     Message = "Không có quyền ở chức năng này!"
                 };
-            }
-            foreach (var movie in _listMovies)
-            {
-                if (string.Compare(movie.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
-                {
-                    return new MessageVM
-                    {
-                        Message = "Tên đã tồn tại"
-                    };
-                }
-            }
+            }        
             if(_movie != null)
             {
                 _movie.UserId = _user.Id;
@@ -174,6 +167,7 @@ namespace BookMovieTickets.Services
                 _movie.Author = dto.Author;
                 _movie.Actor = dto.Actor;
                 _movie.Producer = dto.Producer;
+                _movie.Category = dto.Category;
 
                 _context.SaveChanges();
                 return new MessageVM
@@ -193,7 +187,8 @@ namespace BookMovieTickets.Services
                         PremiereYear = _movie.PremiereYear,
                         Author = _movie.Author,
                         Actor = _movie.Actor,
-                        Producer = _movie.Producer
+                        Producer = _movie.Producer,
+                        Category = _movie.Category
                     }
                 };
             }

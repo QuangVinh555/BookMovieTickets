@@ -9,6 +9,6 @@ namespace BookMovieTickets.Views
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Benchmark { get; set; }
+        public int? Benchmark { get; set; }
     }
 }

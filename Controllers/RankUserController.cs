@@ -21,11 +21,50 @@ namespace BookMovieTickets.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTypeLogin(RankUserDTO dto)
+        public IActionResult CreateRankUser(RankUserDTO dto)
         {
             try
             {
                 return Ok(_rankUserRepository.CreateRankUser(dto));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return Ok(_rankUserRepository.GetAll());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateRankUser(RankUserDTO dto, int id)
+        {
+            try
+            {
+                return Ok(_rankUserRepository.UpdateRankUser(dto, id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteRankUser(int id)
+        {
+            try
+            {
+                return Ok(_rankUserRepository.DeleteRankUser(id));
             }
             catch
             {

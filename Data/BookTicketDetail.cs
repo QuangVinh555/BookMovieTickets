@@ -13,6 +13,8 @@ namespace BookMovieTickets.Data
         public double? TicketPrice { get; set; }
         public int? ComboId { get; set; }
         public int? CountCombo { get; set; }
+        public int? ComboPrice { get; set; }
+        public bool? State { get; set; }
 
         public virtual BookTicket BookTicket { get; set; }
         public virtual Chair Chair { get; set; }

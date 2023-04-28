@@ -84,6 +84,8 @@ namespace BookMovieTickets.Data
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.MoneyPoints).HasColumnName("money_points");
+
                 entity.Property(e => e.MovieId).HasColumnName("movie_id");
 
                 entity.Property(e => e.PaymentId).HasColumnName("payment_id");
@@ -94,11 +96,11 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.State).HasColumnName("state");
 
-                entity.Property(e => e.TicketCount).HasColumnName("ticket_count");
-
-                entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
+                entity.Property(e => e.TotalCombo).HasColumnName("total_combo");
 
                 entity.Property(e => e.TotalPrice).HasColumnName("total_price");
+
+                entity.Property(e => e.TotalTickets).HasColumnName("total_tickets");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")
@@ -140,7 +142,11 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.ComboId).HasColumnName("combo_id");
 
+                entity.Property(e => e.ComboPrice).HasColumnName("combo_price");
+
                 entity.Property(e => e.CountCombo).HasColumnName("count_combo");
+
+                entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 
@@ -601,6 +607,10 @@ namespace BookMovieTickets.Data
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.Date)
+                    .HasColumnType("datetime")
+                    .HasColumnName("date");
+
                 entity.Property(e => e.Deleted)
                     .HasColumnName("deleted")
                     .HasDefaultValueSql("((0))");
@@ -662,10 +672,6 @@ namespace BookMovieTickets.Data
                 entity.ToTable("User_Points");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.AccumulatedPoints)
-                    .HasColumnName("accumulated_points")
-                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.RewardPoints)
                     .HasColumnName("reward_points")

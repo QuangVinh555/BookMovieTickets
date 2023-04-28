@@ -9,7 +9,6 @@ namespace BookMovieTickets.Data
     {
         public int Id { get; set; }
         public int? UserId { get; set; }
-        public int? AccumulatedPoints { get; set; }
         public int? RewardPoints { get; set; }
         public int? RewardPointsUsed { get; set; }
 

@@ -29,6 +29,7 @@ namespace BookMovieTickets.Data
         public bool? Deleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateTime? Date { get; set; }
 
         public virtual LoginType LoginType { get; set; }
         public virtual Role Role { get; set; }

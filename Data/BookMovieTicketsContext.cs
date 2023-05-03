@@ -44,6 +44,7 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+
             }
         }
 
@@ -92,8 +93,6 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.RewardPoints).HasColumnName("reward_points");
 
-                entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
-
                 entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TotalCombo).HasColumnName("total_combo");
@@ -119,11 +118,6 @@ namespace BookMovieTickets.Data
                     .HasForeignKey(d => d.PaymentId)
                     .HasConstraintName("FK__Book_Tick__payme__0B91BA14");
 
-                entity.HasOne(d => d.ShowTime)
-                    .WithMany(p => p.BookTickets)
-                    .HasForeignKey(d => d.ShowTimeId)
-                    .HasConstraintName("FK__Book_Tick__show___0A9D95DB");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.UserId)
@@ -146,6 +140,12 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.CountCombo).HasColumnName("count_combo");
 
+                entity.Property(e => e.Deleted)
+                    .HasColumnName("deleted")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
+
                 entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
@@ -164,6 +164,11 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTicketDetails)
                     .HasForeignKey(d => d.ComboId)
                     .HasConstraintName("FK__Book_Tick__combo__7A3223E8");
+
+                entity.HasOne(d => d.ShowTime)
+                    .WithMany(p => p.BookTicketDetails)
+                    .HasForeignKey(d => d.ShowTimeId)
+                    .HasConstraintName("FK__Book_Tick__show___0697FACD");
             });
 
             modelBuilder.Entity<Chair>(entity =>

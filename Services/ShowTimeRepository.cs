@@ -80,9 +80,9 @@ namespace BookMovieTickets.Services
                 }
                 else
                 {
-                    var _bookTicket = _context.BookTickets.Where(x => x.ShowTimeId == _showtime.Id).ToList();
+                    var _bookTicketDetail = _context.BookTicketDetails.Where(x => x.ShowTimeId == _showtime.Id).ToList();
                     var _hourTime = _context.HourTimes.Where(x => x.ShowTimeId == _showtime.Id).ToList();
-                    _context.RemoveRange(_bookTicket);
+                    _context.RemoveRange(_bookTicketDetail);
                     _context.RemoveRange(_hourTime);
 
                     _context.Remove(_showtime);

@@ -63,6 +63,7 @@ namespace BookMovieTickets.Services
             _user.Avatar = dto.Avatar;
             _user.Fullname = dto.Fullname;
             _user.Email = dto.Email;
+            _user.Date = dto.Date;
             _user.PhoneNumber = dto.PhoneNumber;
             _user.Address = dto.Address;
             _user.Password = passwordEncoding;
@@ -80,6 +81,7 @@ namespace BookMovieTickets.Services
                     Avatar = _user.Avatar,
                     Fullname = _user.Fullname,
                     Email = _user.Email,
+                    Date = _user.Date,
                     PhoneNumber = _user.PhoneNumber,
                     Address = _user.Address,
                     Password = _user.Password,
@@ -127,9 +129,11 @@ namespace BookMovieTickets.Services
                     Avatar = x.Avatar,
                     Fullname = x.Fullname,
                     Email = x.Email,
+                    Date = x.Date,
                     PhoneNumber = x.PhoneNumber,
                     Address = x.Address,
                     Password = x.Password,
+                    CreatedAt = x.CreatedAt,
 
                 }
             }).ToList();
@@ -153,6 +157,7 @@ namespace BookMovieTickets.Services
                         Avatar = _user.Avatar,
                         Fullname = _user.Fullname,
                         Email = _user.Email,
+                        Date = _user.Date,
                         PhoneNumber = _user.PhoneNumber,
                         Address = _user.Address,
                         Password = _user.Password,
@@ -223,6 +228,7 @@ namespace BookMovieTickets.Services
                         Avatar = _user.Avatar,
                         Fullname = _user.Fullname,
                         Email = _user.Email,
+                        Date = _user.Date,
                         PhoneNumber = _user.PhoneNumber,
                         Address = _user.Address,
                         Password = _user.Password,

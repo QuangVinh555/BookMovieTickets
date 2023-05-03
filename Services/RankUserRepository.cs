@@ -79,7 +79,7 @@ namespace BookMovieTickets.Services
                     _context.SaveChanges();
                     return new MessageVM
                     {
-                        Message = "Xóa thành Rank User thành công",
+                        Message = "Xóa Rank User thành công",
                     };
                 }catch(Exception e)
                 {

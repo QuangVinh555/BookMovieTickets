@@ -69,6 +69,14 @@ namespace BookMovieTickets.Services
             _user.Password = passwordEncoding;
             _context.Add(_user);
             _context.SaveChanges();
+
+            var _userPoint = new UserPoint();
+            _userPoint.UserId = _user.Id;
+            _userPoint.RewardPoints = 0;
+            _userPoint.RewardPointsUsed = 0;
+            _context.Add(_userPoint);
+            _context.SaveChanges();
+
             return new MessageVM
             {
                 Message = "Thêm user thành công",

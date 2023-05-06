@@ -73,12 +73,25 @@ namespace BookMovieTickets.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateShowTime(ShowTimeDTO dto, int id)
+        [HttpPut]
+        public IActionResult UpdateShowTime(ShowTimeDTO dto)
         {
             try
             {
-                return Ok(_showTimeRepository.UpdateShowTime(dto,id));
+                return Ok(_showTimeRepository.UpdateShowTime(dto));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateShowTimeById(ShowTimeDTO dto, int id)
+        {
+            try
+            {
+                return Ok(_showTimeRepository.UpdateShowTimeById(dto,id));
             }
             catch
             {

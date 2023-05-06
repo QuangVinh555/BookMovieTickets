@@ -8,8 +8,12 @@ namespace BookMovieTickets.Views
     public class ShowTimeVM
     {
         public int Id { get; set; }
-        public int? CinemaRoomId { get; set; }
-        public int? MovieId { get; set; }
+        public string CinemaRoom { get; set; }
+        public string CinemaName { get; set; }
+        public string CinemaType { get; set; }
+        public string Location { get; set; }
+        public string LocationDetail { get; set; }
+        public string Movie { get; set; }
         public DateTime? ShowDate { get; set; }
         public double? TicketPrice { get; set; }
         public int? NumTicket { get; set; }

@@ -104,28 +104,47 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetAll()
         {
-            var _listShowTimes = _context.ShowTimes.Select(x => new MessageVM
+            var _listShowTimes = _context.ShowTimes.ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var item in _listShowTimes)
             {
-                Message = "Lấy dữ liệu thành công",
-                Data = new ShowTimeVM
+                var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == item.CinemaRoomId).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+                var _showTime = new MessageVM
                 {
-                    Id = x.Id,
-                    CinemaRoomId = x.CinemaRoomId,
-                    MovieId = x.MovieId,
-                    ShowDate = x.ShowDate,
-                    TicketPrice = x.TicketPrice,
-                    NumTicket = x.NumTicket,
-                    Role = x.Role,
-                    State = x.State
-                }
-            }).ToList();
-            return _listShowTimes;
+                    Message = " Lấy dữ liệu thành công",
+                    Data = new ShowTimeVM
+                    {
+                        Id = item.Id,
+                        Location = _location.Province,
+                        CinemaType = _cinemaType.Name,
+                        CinemaName = _cinemaName.Name,
+                        LocationDetail = _cinemaName.LocationDetail,
+                        CinemaRoom = _cinemaRoom.Name,
+                        Movie = _movie.Name,
+                        ShowDate = item.ShowDate,
+                        TicketPrice = item.TicketPrice,
+                        NumTicket = item.NumTicket,
+                        Role = item.Role
+                    }
+                };
+                list.Add(_showTime);
+            }
+            return list;
         }
 
         public MessageVM GetById(int id)
         {
             var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
-            if(_showTime != null)
+            var _movie = _context.Movies.Where(x => x.Id == _showTime.MovieId).SingleOrDefault();
+            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
+            var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+            var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+            var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+            if (_showTime != null)
             {
                 return new MessageVM
                 {
@@ -133,13 +152,16 @@ namespace BookMovieTickets.Services
                     Data = new ShowTimeVM
                     {
                         Id = _showTime.Id,
-                        CinemaRoomId = _showTime.CinemaRoomId,
-                        MovieId = _showTime.MovieId,
+                        Location = _location.Province,
+                        CinemaType = _cinemaType.Name,
+                        CinemaName = _cinemaName.Name,
+                        LocationDetail = _cinemaName.LocationDetail,
+                        CinemaRoom = _cinemaRoom.Name,
+                        Movie = _movie.Name,
                         ShowDate = _showTime.ShowDate,
                         TicketPrice = _showTime.TicketPrice,
                         NumTicket = _showTime.NumTicket,
-                        Role = _showTime.Role,
-                        State = _showTime.State
+                        Role = _showTime.Role
                     }
                 };
             }
@@ -152,115 +174,106 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public MessageVM GetByMovieId(int movie_id)
+        public List<MessageVM> GetByMovieId(int movie_id)
         {
-            var _showTime = _context.ShowTimes.Where(x => x.MovieId == movie_id).ToList();
-            if (_showTime.Count > 0)
+            var _listShowTimes = _context.ShowTimes.Where(x => x.MovieId == movie_id).ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            if (_listShowTimes.Count > 0)
             {
-                var listShowTimes = _showTime.Select(x => new ShowTimeVM
+                foreach (var item in _listShowTimes)
                 {
-                        Id = x.Id,
-                        CinemaRoomId = x.CinemaRoomId,
-                        MovieId = x.MovieId,
-                        ShowDate = x.ShowDate,
-                        TicketPrice = x.TicketPrice,
-                        NumTicket = x.NumTicket,
-                        Role = x.Role,
-                        State = x.State
-                });
-                return new MessageVM
-                {
-                    Message = "Lấy dữ liệu thành công",
-                    Data = listShowTimes
-                };
+                    var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                    var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == item.CinemaRoomId).SingleOrDefault();
+                    var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                    var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                    var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+                    var _showTime =  new MessageVM
+                    {
+                        Message = "Lấy dữ liệu thành công",
+                        Data = new ShowTimeVM
+                        {
+                            Id = item.Id,
+                            Location = _location.Province,
+                            CinemaType = _cinemaType.Name,
+                            CinemaName = _cinemaName.Name,
+                            LocationDetail = _cinemaName.LocationDetail,
+                            CinemaRoom = _cinemaRoom.Name,
+                            Movie = _movie.Name,
+                            ShowDate = item.ShowDate,
+                            TicketPrice = item.TicketPrice,
+                            NumTicket = item.NumTicket,
+                            Role = item.Role
+                        }
+                    };
+                    list.Add(_showTime);
+                }
+                return list;
             }
             else
             {
-                return new MessageVM
+                var error =  new MessageVM
                 {
-                    Message = "Không tìm thấy thông tin id này!",
+                    Message = "Không tìm thấy thông tin của phim này trong suất chiếu này!",
                 };
+                list.Add(error);
+                return list;
             }
         }
 
-        public MessageVM UpdateShowTime(ShowTimeDTO dto, int id)
+        public MessageVM UpdateShowTime(ShowTimeDTO dto)
         {
             try
             {
-                var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
+                var _showTime = _context.ShowTimes.Where(x => x.State == false).SingleOrDefault();
                 var _movie = _context.Movies.Where(x => x.Id == dto.MovieId).SingleOrDefault();
-                var _cinemaRoomId = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();
+                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
                 //DateTime datetime = DateTime.ParseExact(dto.ShowDate.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 if (_showTime != null)
                 {
-                    if (_showTime.State == false)
+                    if (_movie == null)
                     {
-
-                        if (_movie == null)
-                        {
-                            return new MessageVM
-                            {
-                                Message = "Nhập sai thông tin id movie",
-                            };
-                        }
-                        if (_cinemaRoomId == null)
-                        {
-                            return new MessageVM
-                            {
-                                Message = "Nhập sai thông tin id cinemaRoom",
-                            };
-                        }
-                        _showTime.CinemaRoomId = _cinemaRoomId.Id;
-                        _showTime.MovieId = _movie.Id;
-                        _showTime.ShowDate = dto.ShowDate;
-                        _showTime.TicketPrice = dto.TicketPrice;
-                        _showTime.NumTicket = dto.NumTicket;
-                        _showTime.Role = dto.Role;
-                        _showTime.State = true;
-                        _context.SaveChanges();
                         return new MessageVM
                         {
-                            Message = "Cập nhật đầy đủ thông tin suất chiếu thành công",
-                            Data = new ShowTimeVM
-                            {
-                                Id = _showTime.Id,
-                                CinemaRoomId = _showTime.CinemaRoomId,
-                                MovieId = _showTime.MovieId,
-                                ShowDate = _showTime.ShowDate,
-                                TicketPrice = _showTime.TicketPrice,
-                                NumTicket = _showTime.NumTicket,
-                                Role = _showTime.Role,
-                                State = _showTime.State
-                            }
+                            Message = "Nhập sai thông tin id movie",
                         };
                     }
-                    else
+                    if (_cinemaRoom == null)
                     {
-                        _showTime.CinemaRoomId = _cinemaRoomId.Id;
-                        _showTime.MovieId = _movie.Id;
-                        _showTime.ShowDate = dto.ShowDate;
-                        _showTime.TicketPrice = dto.TicketPrice;
-                        _showTime.NumTicket = dto.NumTicket;
-                        _showTime.Role = dto.Role;
-                        _showTime.State = true;
-                        _context.SaveChanges();
                         return new MessageVM
                         {
-                            Message = "Cập nhật suất chiếu thành công",
-                            Data = new ShowTimeVM
-                            {
-                                Id = _showTime.Id,
-                                CinemaRoomId = _showTime.CinemaRoomId,
-                                MovieId = _showTime.MovieId,
-                                ShowDate = _showTime.ShowDate,
-                                TicketPrice = _showTime.TicketPrice,
-                                NumTicket = _showTime.NumTicket,
-                                Role = _showTime.Role,
-                                State = _showTime.State
-                            }
+                            Message = "Nhập sai thông tin id cinemaRoom",
                         };
                     }
-                }
+                    _showTime.CinemaRoomId = _cinemaRoom.Id;
+                    _showTime.MovieId = _movie.Id;
+                    _showTime.ShowDate = dto.ShowDate;
+                    _showTime.TicketPrice = dto.TicketPrice;
+                    _showTime.NumTicket = dto.NumTicket;
+                    _showTime.Role = dto.Role;
+                    _showTime.State = true;
+                    _context.SaveChanges();
+                    return new MessageVM
+                    {
+                        Message = "Cập nhật đầy đủ thông tin suất chiếu thành công",
+                        Data = new ShowTimeVM
+                        {
+                            Id = _showTime.Id,
+                            Location = _location.Province,
+                            CinemaType = _cinemaType.Name,
+                            CinemaName = _cinemaName.Name,
+                            LocationDetail = _cinemaName.LocationDetail,
+                            CinemaRoom = _cinemaRoom.Name,
+                            Movie = _movie.Name,
+                            ShowDate = _showTime.ShowDate,
+                            TicketPrice = _showTime.TicketPrice,
+                            NumTicket = _showTime.NumTicket,
+                            Role = _showTime.Role
+                        }
+                    };
+                }                 
                 else
                 {
                     return new MessageVM
@@ -275,6 +288,66 @@ namespace BookMovieTickets.Services
                 return new MessageVM
                 {
                     Message = e.Message
+                };
+            }
+        }
+
+        public MessageVM UpdateShowTimeById(ShowTimeDTO dto, int id)
+        {
+            var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
+            var _movie = _context.Movies.Where(x => x.Id == dto.MovieId).SingleOrDefault();
+            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();
+            var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+            var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+            var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+            if (_showTime != null)
+            {
+                if (_movie == null)
+                {
+                    return new MessageVM
+                    {
+                        Message = "Nhập sai thông tin id movie",
+                    };
+                }
+                if (_cinemaRoom == null)
+                {
+                    return new MessageVM
+                    {
+                        Message = "Nhập sai thông tin id cinemaRoom",
+                    };
+                }
+                _showTime.CinemaRoomId = _cinemaRoom.Id;
+                _showTime.MovieId = _movie.Id;
+                _showTime.ShowDate = dto.ShowDate;
+                _showTime.TicketPrice = dto.TicketPrice;
+                _showTime.NumTicket = dto.NumTicket;
+                _showTime.Role = dto.Role;
+                _showTime.State = true;
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Cập nhật đầy đủ thông tin suất chiếu thành công",
+                    Data = new ShowTimeVM
+                    {
+                        Id = _showTime.Id,
+                        Location = _location.Province,
+                        CinemaType = _cinemaType.Name,
+                        CinemaName = _cinemaName.Name,
+                        LocationDetail = _cinemaName.LocationDetail,
+                        CinemaRoom = _cinemaRoom.Name,
+                        Movie = _movie.Name,
+                        ShowDate = _showTime.ShowDate,
+                        TicketPrice = _showTime.TicketPrice,
+                        NumTicket = _showTime.NumTicket,
+                        Role = _showTime.Role
+                    }
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy thông tin của suất chiếu này"
                 };
             }
         }

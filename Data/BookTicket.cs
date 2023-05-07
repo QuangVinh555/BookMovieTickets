@@ -24,9 +24,16 @@ namespace BookMovieTickets.Data
         public int? TotalCombo { get; set; }
         public int? MoneyPoints { get; set; }
         public int? TotalTickets { get; set; }
+        public int? ShowTimeId { get; set; }
+        public int? HourTimeId { get; set; }
+        public int? ComboId { get; set; }
+        public int? CountCombo { get; set; }
 
+        public virtual Combo Combo { get; set; }
+        public virtual HourTime HourTime { get; set; }
         public virtual Movie Movie { get; set; }
         public virtual Payment Payment { get; set; }
+        public virtual ShowTime ShowTime { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<BookTicketDetail> BookTicketDetails { get; set; }
     }

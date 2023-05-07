@@ -58,7 +58,7 @@ namespace BookMovieTickets.Services
                     Message = "Tạo thành công suất chiếu"
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return new MessageVM
                 {
@@ -70,8 +70,9 @@ namespace BookMovieTickets.Services
         public MessageVM DeleteShowTime(int id)
         {
             var _showtime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
-            if(_showtime != null) {
-                if(_showtime.State == false)
+            if (_showtime != null)
+            {
+                if (_showtime.State == false)
                 {
                     return new MessageVM
                     {
@@ -80,9 +81,9 @@ namespace BookMovieTickets.Services
                 }
                 else
                 {
-                    var _bookTicketDetail = _context.BookTicketDetails.Where(x => x.ShowTimeId == _showtime.Id).ToList();
+                    var _bookTicket = _context.BookTickets.Where(x => x.ShowTimeId == _showtime.Id).ToList();
                     var _hourTime = _context.HourTimes.Where(x => x.ShowTimeId == _showtime.Id).ToList();
-                    _context.RemoveRange(_bookTicketDetail);
+                    _context.RemoveRange(_bookTicket);
                     _context.RemoveRange(_hourTime);
 
                     _context.Remove(_showtime);
@@ -187,7 +188,7 @@ namespace BookMovieTickets.Services
                     var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
                     var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
                     var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
-                    var _showTime =  new MessageVM
+                    var _showTime = new MessageVM
                     {
                         Message = "Lấy dữ liệu thành công",
                         Data = new ShowTimeVM
@@ -211,7 +212,7 @@ namespace BookMovieTickets.Services
             }
             else
             {
-                var error =  new MessageVM
+                var error = new MessageVM
                 {
                     Message = "Không tìm thấy thông tin của phim này trong suất chiếu này!",
                 };
@@ -273,7 +274,7 @@ namespace BookMovieTickets.Services
                             Role = _showTime.Role
                         }
                     };
-                }                 
+                }
                 else
                 {
                     return new MessageVM
@@ -282,7 +283,7 @@ namespace BookMovieTickets.Services
                     };
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.InnerException.Message);
                 return new MessageVM

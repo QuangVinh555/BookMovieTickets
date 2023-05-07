@@ -55,6 +55,8 @@ namespace BookMovieTickets
             services.AddScoped<IChairRepository, ChairRepository>();
             services.AddScoped<IComboRepository, ComboRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IBookTicketRepository, BookTicketRepository>();
+            services.AddScoped<IBookTicketDetailRepository, BookTicketDetailRepository>();
 
             services.AddSwaggerGen(c =>
             {

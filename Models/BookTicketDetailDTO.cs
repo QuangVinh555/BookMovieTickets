@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace BookMovieTickets.Data
+namespace BookMovieTickets.Models
 {
-    public partial class BookTicketDetail
+    public class BookTicketDetailDTO
     {
-        public int Id { get; set; }
         public int? BookTicketId { get; set; }
         public int? ChairId { get; set; }
         public double? TicketPrice { get; set; }
         public bool? Deleted { get; set; }
         public bool? State { get; set; }
-
-        public virtual BookTicket BookTicket { get; set; }
-        public virtual Chair Chair { get; set; }
     }
 }

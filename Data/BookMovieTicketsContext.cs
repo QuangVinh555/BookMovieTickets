@@ -80,10 +80,16 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.ComboId).HasColumnName("combo_id");
+
+                entity.Property(e => e.CountCombo).HasColumnName("count_combo");
+
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.HourTimeId).HasColumnName("hour_time_id");
 
                 entity.Property(e => e.MoneyPoints).HasColumnName("money_points");
 
@@ -92,6 +98,8 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.PaymentId).HasColumnName("payment_id");
 
                 entity.Property(e => e.RewardPoints).HasColumnName("reward_points");
+
+                entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
 
                 entity.Property(e => e.State).HasColumnName("state");
 
@@ -108,6 +116,16 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
+                entity.HasOne(d => d.Combo)
+                    .WithMany(p => p.BookTickets)
+                    .HasForeignKey(d => d.ComboId)
+                    .HasConstraintName("FK__Book_Tick__combo__41B8C09B");
+
+                entity.HasOne(d => d.HourTime)
+                    .WithMany(p => p.BookTickets)
+                    .HasForeignKey(d => d.HourTimeId)
+                    .HasConstraintName("FK__Book_Tick__hour___3FD07829");
+
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.MovieId)
@@ -117,6 +135,11 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTickets)
                     .HasForeignKey(d => d.PaymentId)
                     .HasConstraintName("FK__Book_Tick__payme__0B91BA14");
+
+                entity.HasOne(d => d.ShowTime)
+                    .WithMany(p => p.BookTickets)
+                    .HasForeignKey(d => d.ShowTimeId)
+                    .HasConstraintName("FK__Book_Tick__show___40C49C62");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.BookTickets)
@@ -134,19 +157,13 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.ChairId).HasColumnName("chair_id");
 
-                entity.Property(e => e.ComboId).HasColumnName("combo_id");
-
-                entity.Property(e => e.ComboPrice).HasColumnName("combo_price");
-
-                entity.Property(e => e.CountCombo).HasColumnName("count_combo");
-
                 entity.Property(e => e.Deleted)
                     .HasColumnName("deleted")
                     .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ShowTimeId).HasColumnName("show_time_id");
-
-                entity.Property(e => e.State).HasColumnName("state");
+                entity.Property(e => e.State)
+                    .HasColumnName("state")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 
@@ -159,16 +176,6 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.BookTicketDetails)
                     .HasForeignKey(d => d.ChairId)
                     .HasConstraintName("FK__Book_Tick__chair__531856C7");
-
-                entity.HasOne(d => d.Combo)
-                    .WithMany(p => p.BookTicketDetails)
-                    .HasForeignKey(d => d.ComboId)
-                    .HasConstraintName("FK__Book_Tick__combo__7A3223E8");
-
-                entity.HasOne(d => d.ShowTime)
-                    .WithMany(p => p.BookTicketDetails)
-                    .HasForeignKey(d => d.ShowTimeId)
-                    .HasConstraintName("FK__Book_Tick__show___0697FACD");
             });
 
             modelBuilder.Entity<Chair>(entity =>

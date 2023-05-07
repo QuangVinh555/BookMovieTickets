@@ -9,7 +9,7 @@ namespace BookMovieTickets.Data
     {
         public Combo()
         {
-            BookTicketDetails = new HashSet<BookTicketDetail>();
+            BookTickets = new HashSet<BookTicket>();
         }
 
         public int Id { get; set; }
@@ -23,6 +23,6 @@ namespace BookMovieTickets.Data
         public DateTime? UpdatedAt { get; set; }
         public bool? Deleted { get; set; }
 
-        public virtual ICollection<BookTicketDetail> BookTicketDetails { get; set; }
+        public virtual ICollection<BookTicket> BookTickets { get; set; }
     }
 }

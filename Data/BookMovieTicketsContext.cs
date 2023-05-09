@@ -45,8 +45,7 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-
-            }
+                }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -105,10 +104,6 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.TotalCombo).HasColumnName("total_combo");
-
-                entity.Property(e => e.TotalPercent)
-                    .HasColumnName("total_percent")
-                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.TotalPrice).HasColumnName("total_price");
 
@@ -369,7 +364,7 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Content)
-                    .HasMaxLength(1)
+                    .HasMaxLength(1500)
                     .HasColumnName("content");
 
                 entity.Property(e => e.CountStars).HasColumnName("count_stars");
@@ -504,6 +499,8 @@ namespace BookMovieTickets.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("stamp");
+
+                entity.Property(e => e.TotalPercent).HasColumnName("total_percent");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")

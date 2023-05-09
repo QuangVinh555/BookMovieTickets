@@ -21,5 +21,8 @@ namespace BookMovieTickets.Views
         public string Producer { get; set; }
         public string Actor { get; set; }
         public string Category { get; set; }
+        public double? TotalPercent { get; set; }
+
+
     }
 }

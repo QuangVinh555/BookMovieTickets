@@ -25,7 +25,6 @@ namespace BookMovieTickets.Views
         public double? Total { get; set; }
         public double? RewardPoints_Used { get; set; }
         public int? RewardPoints { get; set; }
-        public int? TotalPercent { get; set; }
         public bool? State { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

@@ -21,7 +21,7 @@ namespace BookMovieTickets.Services
             var _movie = new Movie();
             var _listMovies = _context.Movies.ToList();
             var _user = _context.Users.Where(x => x.Id == dto.UserId).SingleOrDefault();
-            if(_user.RoleId != 1)
+            if(_user.RoleId != 2)
             {
                 return new MessageVM
                 {
@@ -70,7 +70,8 @@ namespace BookMovieTickets.Services
                     Author = _movie.Author,
                     Actor = _movie.Actor,
                     Producer = _movie.Producer,
-                    Category = _movie.Category
+                    Category = _movie.Category,
+                    TotalPercent = _movie.TotalPercent
                 }
             };
         }
@@ -100,7 +101,8 @@ namespace BookMovieTickets.Services
                     Author = x.Author,
                     Actor = x.Actor,
                     Producer = x.Producer,
-                    Category = x.Category
+                    Category = x.Category,
+                    TotalPercent = x.TotalPercent
                 }
             }).ToList();
             return _listMovies;
@@ -129,7 +131,8 @@ namespace BookMovieTickets.Services
                         Author = _movie.Author,
                         Actor = _movie.Actor,
                         Producer = _movie.Producer,
-                        Category = _movie.Category
+                        Category = _movie.Category,
+                        TotalPercent = _movie.TotalPercent
                     }
                 };
             }
@@ -146,7 +149,7 @@ namespace BookMovieTickets.Services
         {
             var _movie = _context.Movies.Where(x => x.Id == id).SingleOrDefault();
             var _user = _context.Users.Where(x => x.Id == dto.UserId).SingleOrDefault();
-            if (_user.RoleId != 1)
+            if (_user.RoleId != 2)
             {
                 return new MessageVM
                 {
@@ -188,7 +191,8 @@ namespace BookMovieTickets.Services
                         Author = _movie.Author,
                         Actor = _movie.Actor,
                         Producer = _movie.Producer,
-                        Category = _movie.Category
+                        Category = _movie.Category,
+                        TotalPercent = _movie.TotalPercent
                     }
                 };
             }

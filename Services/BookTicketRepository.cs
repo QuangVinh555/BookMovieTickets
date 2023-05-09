@@ -58,7 +58,6 @@ namespace BookMovieTickets.Services
                             Total = item.TotalPrice == null ? 0 : item.TotalPrice,
                             RewardPoints = item.RewardPoints == null ? 0 : item.RewardPoints,
                             RewardPoints_Used = item.MoneyPoints == null ? 0 : item.MoneyPoints,
-                            TotalPercent = item.TotalPercent == null ? 0 : item.TotalPercent,
                             CreatedAt = item.CreatedAt == null ? DateTime.Now : item.CreatedAt
                         }
                     };
@@ -449,7 +448,6 @@ namespace BookMovieTickets.Services
                                 Total = _bookTicket.TotalPrice,
                                 RewardPoints_Used = _bookTicket.MoneyPoints,
                                 RewardPoints = _bookTicket.RewardPoints,
-                                TotalPercent = _bookTicket.TotalPercent,
                                 CreatedAt = _bookTicket.UpdatedAt
                             }
                         };

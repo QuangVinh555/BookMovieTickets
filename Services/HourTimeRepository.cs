@@ -47,7 +47,19 @@ namespace BookMovieTickets.Services
             _context.Add(_hourTime);
             _context.SaveChanges();
 
-
+            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
+            var _listChairs = _context.Chairs.ToList();
+            foreach (var item in _listChairs)
+            {
+                if(item.CinemaRoomId == _cinemaRoom.Id)
+                {
+                    var _chairStatus = new ChairStatus();
+                    _chairStatus.HourTimeId = _hourTime.Id;
+                    _chairStatus.ChairId = item.Id;
+                    _context.Add(_chairStatus);
+                }
+                    _context.SaveChanges();
+            }
             return new MessageVM
             {
                 Message = "Tạo giờ chiếu thành công",

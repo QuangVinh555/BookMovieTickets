@@ -24,14 +24,15 @@ namespace BookMovieTickets.Services
                 {
                     var _bookTicketDetail = new BookTicketDetail();                
                     var _bookTicket = _context.BookTickets.Where(x => x.Id == dto.BookTicketId).SingleOrDefault();
+                    var _showTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault();
+
                     if (_bookTicket == null)
                     {
                         return new MessageVM
                         {
                             Message = "Thông tin của BookTicket Id này chưa chính xác"
                         };
-                    }             
-
+                    }
                     var _chair = _context.Chairs.Where(x => x.Id == dto.ChairId).SingleOrDefault();
                     if (_chair == null)
                     {
@@ -40,14 +41,22 @@ namespace BookMovieTickets.Services
                             Message = "Thông tin của Chair Id này chưa chính xác"
                         };
                     }
-                    if(_chair.Status != 0)
-                    {
-                        return new MessageVM
+
+                    var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == _chair.Id && x.HourTimeId == _bookTicket.HourTimeId).SingleOrDefault();
+                        if(_chairStatus.Status == 2)
                         {
-                            Message = "Ghế này đã được đặt"
-                        };
-                    }
-                    var _showTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault();
+                            return new MessageVM
+                            {
+                                Message = "Ghế này đã được đặt"
+                            };
+                        }
+                        if (_chairStatus.Status == 1)
+                        {
+                            return new MessageVM
+                            {
+                                Message = "Ghế này đang được người khác giữ"
+                            };
+                        }
 
                     _bookTicketDetail.BookTicketId = _bookTicket.Id;
                     _bookTicketDetail.ChairId = _chair.Id;
@@ -56,19 +65,12 @@ namespace BookMovieTickets.Services
                     _context.SaveChanges();
                     _context.Add(_bookTicketDetail);
 
-                    if(_chair != null)
+                    if(_chairStatus != null)
                     {
-                        var _listChairs = _context.Chairs.ToList();
-                        foreach (var item in _listChairs)
-                        {
-                            if(item.Id == _chair.Id)
-                            {
-                                item.Status = 1;
-                                _context.SaveChanges();
-                            }
-                        }
+                        _chairStatus.Status = 1;
+                        _context.SaveChanges();
                     }
-              
+
                     return new MessageVM
                     {
                         Message = "Tạo thành công",
@@ -103,10 +105,12 @@ namespace BookMovieTickets.Services
             var _bookTicketDetail = _context.BookTicketDetails.Where(x => x.Id == id && x.State == false).SingleOrDefault();
             if(_bookTicketDetail != null)
             {
+                var _bookTicket = _context.BookTickets.Where(x => x.Id == _bookTicketDetail.BookTicketId).SingleOrDefault();
                 var _chair = _context.Chairs.Where(x => x.Id == _bookTicketDetail.ChairId).SingleOrDefault();
-                if(_chair != null)
+                var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == _chair.Id && x.HourTimeId == _bookTicket.HourTimeId).SingleOrDefault();
+                if(_chairStatus != null)
                 {
-                    _chair.Status = 0;
+                    _chairStatus.Status = 0;
                     _context.SaveChanges();
                 }
                 _context.Remove(_bookTicketDetail);

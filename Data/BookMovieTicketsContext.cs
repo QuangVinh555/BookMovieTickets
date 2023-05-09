@@ -176,7 +176,7 @@ namespace BookMovieTickets.Data
                 entity.HasOne(d => d.Chair)
                     .WithMany(p => p.BookTicketDetails)
                     .HasForeignKey(d => d.ChairId)
-                    .HasConstraintName("FK__Book_Tick__chair__531856C7");
+                    .HasConstraintName("FK__Book_Tick__chair__59904A2C");
             });
 
             modelBuilder.Entity<Chair>(entity =>

@@ -28,6 +28,7 @@ namespace BookMovieTickets.Data
         public int? HourTimeId { get; set; }
         public int? ComboId { get; set; }
         public int? CountCombo { get; set; }
+        public int? TotalPercent { get; set; }
 
         public virtual Combo Combo { get; set; }
         public virtual HourTime HourTime { get; set; }

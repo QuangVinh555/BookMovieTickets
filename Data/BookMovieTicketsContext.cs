@@ -106,6 +106,10 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.TotalCombo).HasColumnName("total_combo");
 
+                entity.Property(e => e.TotalPercent)
+                    .HasColumnName("total_percent")
+                    .HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.TotalPrice).HasColumnName("total_price");
 
                 entity.Property(e => e.TotalTickets).HasColumnName("total_tickets");
@@ -368,7 +372,7 @@ namespace BookMovieTickets.Data
                     .HasMaxLength(1)
                     .HasColumnName("content");
 
-                entity.Property(e => e.CountLikeComment).HasColumnName("count_like_comment");
+                entity.Property(e => e.CountStars).HasColumnName("count_stars");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")

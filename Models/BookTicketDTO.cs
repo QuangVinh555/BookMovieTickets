@@ -20,6 +20,8 @@ namespace BookMovieTickets.Models
         public int? HourTimeId { get; set; }
         public int? ComboId { get; set; }
         public int? CountCombo { get; set; }
+        public int? TotalPercent { get; set; }
+
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

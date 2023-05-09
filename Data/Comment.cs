@@ -11,9 +11,9 @@ namespace BookMovieTickets.Data
         public int? UserId { get; set; }
         public int? MovieId { get; set; }
         public string Content { get; set; }
-        public int? CountLikeComment { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public int? CountStars { get; set; }
 
         public virtual Movie Movie { get; set; }
         public virtual User User { get; set; }

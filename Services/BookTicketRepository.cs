@@ -44,7 +44,7 @@ namespace BookMovieTickets.Services
                             UserName = item.UserId == null ? "" : _context.Users.Where(y => y.Id == item.UserId).FirstOrDefault().Fullname,
                             Movie = item.MovieId == null ? "" : _context.Movies.Where(y => y.Id == item.MovieId).SingleOrDefault().Name,
                             Stamp = item.MovieId == null ? "" : _context.Movies.Where(y => y.Id == item.MovieId).SingleOrDefault().Stamp,
-                            RoleMovie = _showTime == null ? "" :  _showTime.Role,
+                            RoleMovie = _showTime == null ? "" : _showTime.Role,
                             ShowTime = _showTime == null ? DateTime.Now : _showTime.ShowDate,
                             HourTime = _hourTime == null ? "" : _hourTime.Time,
                             Payment = item.PaymentId == null ? "" : _context.Payments.Where(y => y.Id == item.PaymentId).SingleOrDefault().PaymentType,
@@ -58,6 +58,7 @@ namespace BookMovieTickets.Services
                             Total = item.TotalPrice == null ? 0 : item.TotalPrice,
                             RewardPoints = item.RewardPoints == null ? 0 : item.RewardPoints,
                             RewardPoints_Used = item.MoneyPoints == null ? 0 : item.MoneyPoints,
+                            TotalPercent = item.TotalPercent == null ? 0 : item.TotalPercent,
                             CreatedAt = item.CreatedAt == null ? DateTime.Now : item.CreatedAt
                         }
                     };
@@ -448,6 +449,7 @@ namespace BookMovieTickets.Services
                                 Total = _bookTicket.TotalPrice,
                                 RewardPoints_Used = _bookTicket.MoneyPoints,
                                 RewardPoints = _bookTicket.RewardPoints,
+                                TotalPercent = _bookTicket.TotalPercent,
                                 CreatedAt = _bookTicket.UpdatedAt
                             }
                         };

@@ -100,6 +100,29 @@ namespace BookMovieTickets.Services
 
         }
 
+        public List<MessageVM> GetByCinemaRoomId(int cinemaRoomId)
+        {
+            var _listChairs = _context.Chairs.Where(x => x.CinemaRoomId == cinemaRoomId).ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var item in _listChairs)
+            {
+                var _chair = new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new ChairVM
+                    {
+                        Id = item.Id,
+                        CinemaRoomId = item.CinemaRoomId,
+                        ChairTypeId = item.ChairTypeId,
+                        Name = item.Name,
+                        Status = item.Status
+                    }
+                };
+                list.Add(_chair);
+            }
+            return list;
+        }
+
         public MessageVM GetById(int id)
         {
             var _chair = _context.Chairs.Where(x => x.Id == id).SingleOrDefault();

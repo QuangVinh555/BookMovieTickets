@@ -60,6 +60,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("cinemaroom/{cinemaRoomId}")]
+        public IActionResult GetByCinemaRoomId(int cinemaRoomId)
+        {
+            try
+            {
+                return Ok(_chairRepository.GetByCinemaRoomId(cinemaRoomId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateChair(ChairDTO dto, int id)
         {

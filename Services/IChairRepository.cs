@@ -11,6 +11,7 @@ namespace BookMovieTickets.Services
     {
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
+        List<MessageVM> GetByCinemaRoomId(int cinemaRoomId);
         MessageVM CreateChair(ChairDTO dto);
         MessageVM UpdateChair(ChairDTO dto, int id);
         MessageVM DeleteChair(int id);

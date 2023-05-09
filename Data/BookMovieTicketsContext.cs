@@ -21,6 +21,7 @@ namespace BookMovieTickets.Data
         public virtual DbSet<BookTicket> BookTickets { get; set; }
         public virtual DbSet<BookTicketDetail> BookTicketDetails { get; set; }
         public virtual DbSet<Chair> Chairs { get; set; }
+        public virtual DbSet<ChairStatus> ChairStatuses { get; set; }
         public virtual DbSet<ChairType> ChairTypes { get; set; }
         public virtual DbSet<CinemaName> CinemaNames { get; set; }
         public virtual DbSet<CinemaRoom> CinemaRooms { get; set; }
@@ -209,6 +210,35 @@ namespace BookMovieTickets.Data
                     .WithMany(p => p.Chairs)
                     .HasForeignKey(d => d.CinemaRoomId)
                     .HasConstraintName("FK__Chair__cinema_ro__08B54D69");
+            });
+
+            modelBuilder.Entity<ChairStatus>(entity =>
+            {
+                entity.ToTable("Chair_Status");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ChairId).HasColumnName("chair_id");
+
+                entity.Property(e => e.Deleted)
+                    .HasColumnName("deleted")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.HourTimeId).HasColumnName("hour_time_id");
+
+                entity.Property(e => e.Status)
+                    .HasColumnName("status")
+                    .HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.Chair)
+                    .WithMany(p => p.ChairStatuses)
+                    .HasForeignKey(d => d.ChairId)
+                    .HasConstraintName("FK__Chair_Sta__chair__57A801BA");
+
+                entity.HasOne(d => d.HourTime)
+                    .WithMany(p => p.ChairStatuses)
+                    .HasForeignKey(d => d.HourTimeId)
+                    .HasConstraintName("FK__Chair_Sta__hour___56B3DD81");
             });
 
             modelBuilder.Entity<ChairType>(entity =>

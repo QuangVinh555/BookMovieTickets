@@ -46,6 +46,8 @@ namespace BookMovieTickets.Services
             _hourTime.EndTime = dto.EndTime;
             _context.Add(_hourTime);
             _context.SaveChanges();
+
+
             return new MessageVM
             {
                 Message = "Tạo giờ chiếu thành công",

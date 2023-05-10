@@ -245,7 +245,7 @@ namespace BookMovieTickets.Services
                                             };
                                         }                                     
                                         _chair.Status = 2;
-                                        _context.SaveChanges();
+                                        //_context.SaveChanges();
                                     }
                                     priceTicket = priceTicket + (decimal)(item.TicketPrice);
                                     accumulated_points_Ticket = Math.Round((TICKET_MEMBER * (decimal)(priceTicket) / 1000));
@@ -287,7 +287,7 @@ namespace BookMovieTickets.Services
                                         }
                                      
                                         _chair.Status = 2;
-                                        _context.SaveChanges();
+                                        //_context.SaveChanges();
                                     }
                                     priceTicket = priceTicket + (decimal)(item.TicketPrice);
                                     accumulated_points_Ticket = Math.Round((TICKET_VIP * (decimal)(priceTicket) / 1000));
@@ -329,7 +329,7 @@ namespace BookMovieTickets.Services
                                         }
                                       
                                         _chair.Status = 2;
-                                        _context.SaveChanges();
+                                        //_context.SaveChanges();
                                     }
                                     priceTicket = priceTicket + (decimal)(item.TicketPrice);
                                     accumulated_points_Ticket = Math.Round((TICKET_VVIP * (decimal)(priceTicket) / 1000));
@@ -361,7 +361,7 @@ namespace BookMovieTickets.Services
                                 {
                                     combo.Count = combo.Count - dto.CountCombo;
                                 }
-                                _context.SaveChanges();
+                                //_context.SaveChanges();
                             }
                         }
 
@@ -381,13 +381,13 @@ namespace BookMovieTickets.Services
                                 {
                                     _userPoint.RewardPoints = (_userPoint.RewardPoints - dto.MoneyPoints) + (int)total_accumulated_points;
                                     _userPoint.RewardPointsUsed = _userPoint.RewardPointsUsed + dto.MoneyPoints;
-                                    _context.SaveChanges();
+                                    //_context.SaveChanges();
                                 }
                             }
                             else
                             {
                                 _userPoint.RewardPoints = _userPoint.RewardPoints + (int)total_accumulated_points;
-                                _context.SaveChanges();
+                                //_context.SaveChanges();
                             }
                         }
 

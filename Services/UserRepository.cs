@@ -12,6 +12,7 @@ namespace BookMovieTickets.Services
     public class UserRepository : IUserRepository
     {
         private readonly BookMovieTicketsContext _context;
+        public int PAGE_SIZE { get; set; } = 10;
 
         public UserRepository(BookMovieTicketsContext context)
         {
@@ -27,39 +28,40 @@ namespace BookMovieTickets.Services
                 {
                     return new MessageVM
                     {
+                        Status = "Error",
                         Message = "Email đã tồn tại"
                     };
                 }
             }
-            var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
-            if(_role == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm RoleId"
-                };
-            }
-            var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
-            if (_loginType == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm LoginTypeId"
-                };
-            }
-            var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
-            if (_rankUser == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm RankUserId"
-                };
-            }
+            //var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
+            //if(_role == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm RoleId"
+            //    };
+            //}
+            //var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
+            //if (_loginType == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm LoginTypeId"
+            //    };
+            //}
+            //var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
+            //if (_rankUser == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm RankUserId"
+            //    };
+            //}
             byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
             string passwordEncoding = Convert.ToBase64String(bytes);
-            _user.RoleId = _role.Id;
-            _user.LoginTypeId = _loginType.Id;
-            _user.UserRankId = _rankUser.Id;
+            //_user.RoleId = _role.Id;
+            //_user.LoginTypeId = _loginType.Id;
+            //_user.UserRankId = _rankUser.Id;
             _user.Avatar = dto.Avatar;
             _user.Fullname = dto.Fullname;
             _user.Email = dto.Email;
@@ -79,6 +81,7 @@ namespace BookMovieTickets.Services
 
             return new MessageVM
             {
+                Status = "Success",
                 Message = "Thêm user thành công",
                 Data = new UserVM
                 {
@@ -123,29 +126,63 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public List<MessageVM> GetAll()
+        public List<MessageVM> GetAll(int page)
         {
-            var _listUsers = _context.Users.Select(x => new MessageVM
+            int total = 0;
+            var _listTotalUser = _context.Users.ToList();
+            foreach (var item in _listTotalUser)
             {
-                Message = "Lấy dữ liệu thành công",
-                Data = new UserVM
-                {
-                    Id = x.Id,
-                    RoleId = x.RoleId,
-                    LoginTypeId = x.LoginTypeId,
-                    UserRankId = x.UserRankId,
-                    Avatar = x.Avatar,
-                    Fullname = x.Fullname,
-                    Email = x.Email,
-                    Date = x.Date,
-                    PhoneNumber = x.PhoneNumber,
-                    Address = x.Address,
-                    Password = x.Password,
-                    CreatedAt = x.CreatedAt,
+                total++;
+            }
+            var _listUsers = _context.Users.Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE);
+            List<MessageVM> list = new List<MessageVM>();
 
-                }
-            }).ToList();
-            return _listUsers;
+            foreach (var item in _listUsers)
+            {
+                var user = new MessageVM
+                {
+                    Message = "Lấy dữu liệu thành công",
+                    TotalPage = total,
+                    Data = new UserVM
+                    {
+                        Id = item.Id,
+                        RoleId = item.RoleId,
+                        LoginTypeId = item.LoginTypeId,
+                        UserRankId = item.UserRankId,
+                        Avatar = item.Avatar,
+                        Fullname = item.Fullname,
+                        Email = item.Email,
+                        Date = item.Date,
+                        PhoneNumber = item.PhoneNumber,
+                        Address = item.Address,
+                        Password = item.Password,
+                        CreatedAt = item.CreatedAt,
+                    }
+                };
+                list.Add(user);
+            }
+            return list;
+            //var _listUsers = _context.Users.Select(x => new MessageVM
+            //{
+            //    Message = "Lấy dữ liệu thành công",
+            //    Data = new UserVM
+            //    {
+            //        Id = x.Id,
+            //        RoleId = x.RoleId,
+            //        LoginTypeId = x.LoginTypeId,
+            //        UserRankId = x.UserRankId,
+            //        Avatar = x.Avatar,
+            //        Fullname = x.Fullname,
+            //        Email = x.Email,
+            //        Date = x.Date,
+            //        PhoneNumber = x.PhoneNumber,
+            //        Address = x.Address,
+            //        Password = x.Password,
+            //        CreatedAt = x.CreatedAt,
+
+            //    }
+            //}).ToList();
+            //return _listUsers;
         }
 
         public MessageVM GetById(int id)

@@ -34,11 +34,11 @@ namespace BookMovieTickets.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page)
         {
             try
             {
-                return Ok(_userRepository.GetAll());
+                return Ok(_userRepository.GetAll(page));
             }
             catch
             {

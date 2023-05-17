@@ -107,7 +107,22 @@ namespace BookMovieTickets.Services
             {
                 try
                 {
-                    return null;
+                    if(_user.Deleted == true)
+                    {
+                        return new MessageVM
+                        {
+                            Message = "Người dùng đã được xóa"
+                        };
+                    }
+                    else
+                    {
+                        _user.Deleted = true;
+                        _context.SaveChanges();
+                        return new MessageVM
+                        {
+                            Message = "Xóa user thành công"
+                        };
+                    }
                 }
                 catch(Exception e)
                 {
@@ -132,9 +147,14 @@ namespace BookMovieTickets.Services
             var _listTotalUser = _context.Users.ToList();
             foreach (var item in _listTotalUser)
             {
-                total++;
+                if(item.RoleId == 1 && item.Deleted == false)
+                {
+                    total++;
+                }
             }
-            var _listUsers = _context.Users.Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE);
+            //var _listUsers = _context.Users.Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE);
+            var _listUsers = _context.Users.Where(x => x.RoleId == 1 && x.Deleted == false).Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE).ToList();
+
             List<MessageVM> list = new List<MessageVM>();
 
             foreach (var item in _listUsers)
@@ -219,72 +239,82 @@ namespace BookMovieTickets.Services
 
         public MessageVM UpdateUser(UserDTO dto, int id)
         {
-            var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
-            if (_role == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm RoleId"
-                };
-            }
+            //var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
+            //if (_role == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm RoleId"
+            //    };
+            //}
 
-            var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
-            if (_loginType == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm LoginTypeId"
-                };
-            }
+            //var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
+            //if (_loginType == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm LoginTypeId"
+            //    };
+            //}
 
-            var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
-            if (_rankUser == null)
-            {
-                return new MessageVM
-                {
-                    Message = "Lỗi khi tìm RankUserId"
-                };
-            }
+            //var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
+            //if (_rankUser == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Lỗi khi tìm RankUserId"
+            //    };
+            //}
 
-            byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
-            string passwordEncoding = Convert.ToBase64String(bytes);
-
-            var _user = _context.Users.Where(x => x.Id == id).SingleOrDefault();
-            if(_user != null)
+            try
             {
-                _user.LoginTypeId = _loginType.Id;
-                _user.UserRankId = _rankUser.Id;
-                _user.Avatar = dto.Avatar;
-                _user.Fullname = dto.Fullname;
-                _user.Email = dto.Email;
-                _user.PhoneNumber = dto.PhoneNumber;
-                _user.Address = dto.Address;
-                _user.Password = passwordEncoding;
-                _context.SaveChanges();
-                return new MessageVM
+                byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
+                string passwordEncoding = Convert.ToBase64String(bytes);
+
+                var _user = _context.Users.Where(x => x.Id == id).SingleOrDefault();
+                if (_user != null)
                 {
-                    Message = "Cập nhật thông tin thành công",
-                    Data = new UserVM
+                    _user.Avatar = dto.Avatar;
+                    _user.Fullname = dto.Fullname;
+                    _user.Email = dto.Email;
+                    _user.Date = dto.Date;
+                    _user.PhoneNumber = dto.PhoneNumber;
+                    _user.Address = dto.Address;
+                    _user.Password = passwordEncoding;
+                    _context.SaveChanges();
+                    return new MessageVM
                     {
-                        Id = _user.Id,
-                        RoleId = _user.RoleId,
-                        LoginTypeId = _user.LoginTypeId,
-                        UserRankId = _user.UserRankId,
-                        Avatar = _user.Avatar,
-                        Fullname = _user.Fullname,
-                        Email = _user.Email,
-                        Date = _user.Date,
-                        PhoneNumber = _user.PhoneNumber,
-                        Address = _user.Address,
-                        Password = _user.Password,
-                    }
-                };
+                        Message = "Cập nhật thông tin thành công",
+                        Data = new UserVM
+                        {
+                            Id = _user.Id,
+                            RoleId = _user.RoleId,
+                            LoginTypeId = _user.LoginTypeId,
+                            UserRankId = _user.UserRankId,
+                            Avatar = _user.Avatar,
+                            Fullname = _user.Fullname,
+                            Email = _user.Email,
+                            Date = _user.Date,
+                            PhoneNumber = _user.PhoneNumber,
+                            Address = _user.Address,
+                            Password = _user.Password,
+                        }
+                    };
+                }
+                else
+                {
+                    return new MessageVM
+                    {
+                        Message = "Không tìm thấy thông tin của Id này"
+                    };
+                }
             }
-            else
+            catch(Exception e)
             {
+                Console.WriteLine(e.InnerException.Message);
                 return new MessageVM
                 {
-                    Message = "Không tìm thấy thông tin của Id này"
+                    Message = e.Message
                 };
             }
         }

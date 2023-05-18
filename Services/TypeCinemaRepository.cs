@@ -38,6 +38,30 @@ namespace BookMovieTickets.Services
             };
         }
 
+        public MessageVM DeleteTypeCinema(int id)
+        {
+            var _typeCinema = _context.CinemaTypes.Where(x => x.Id == id).SingleOrDefault();
+            if(_typeCinema != null)
+            {
+                var _cinemaName = _context.CinemaNames.Where(x => x.CinemaTypeId == _typeCinema.Id).ToList();
+                _context.CinemaNames.RemoveRange(_cinemaName);
+                _context.Remove(_typeCinema);
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Xóa dữ liệu thành công"
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy dữ liệu cần xóa!"
+                };
+            }
+
+        }
+
         public List<MessageVM> GetAll()
         {
             var _listTypeCinemas = _context.CinemaTypes.Select(x => new MessageVM

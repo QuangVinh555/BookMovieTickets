@@ -11,5 +11,6 @@ namespace BookMovieTickets.Services
     {
         MessageVM CreateLocation(LocationDTO dto);
         List<MessageVM> GetAll();
+        List<MessageVM> GetAllByPage(int page);
     }
 }

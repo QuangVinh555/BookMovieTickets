@@ -11,7 +11,7 @@ namespace BookMovieTickets.Services
     {
         MessageVM CreateTypeCinema(TypeCinemaDTO dto);
         List<MessageVM> GetAll();
-
         MessageVM UpdateTypeCinema(TypeCinemaDTO dto, int id);
+        MessageVM DeleteTypeCinema(int id);
     }
 }

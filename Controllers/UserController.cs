@@ -34,11 +34,24 @@ namespace BookMovieTickets.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(int page)
+        public IActionResult GetAll()
         {
             try
             {
-                return Ok(_userRepository.GetAll(page));
+                return Ok(_userRepository.GetAll());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("page")]
+        public IActionResult GetAllByPage(int page)
+        {
+            try
+            {
+                return Ok(_userRepository.GetAllByPage(page));
             }
             catch
             {

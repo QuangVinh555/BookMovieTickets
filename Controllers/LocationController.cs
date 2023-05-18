@@ -47,5 +47,18 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("page")]
+        public IActionResult GetAllByPage(int page)
+        {
+            try
+            {
+                return Ok(_locationRepository.GetAllByPage(page));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

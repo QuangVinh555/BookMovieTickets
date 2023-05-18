@@ -11,6 +11,7 @@ namespace BookMovieTickets.Services
     public class LocationRepository : ILocationRepository
     {
         private readonly BookMovieTicketsContext _context;
+        public int PAGE_SIZE { get; set; } = 10;
 
         public LocationRepository(BookMovieTicketsContext context)
         {
@@ -74,6 +75,34 @@ namespace BookMovieTickets.Services
                 }
             }).ToList();
             return _listLocations; 
+        }
+
+        public List<MessageVM> GetAllByPage(int page)
+        {
+            var _list = _context.Locations.ToList();
+            int total = 0;
+            foreach (var item in _list)
+            {
+                total++;
+            }
+            var _listLocations = _context.Locations.Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE);
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var item in _listLocations)
+            {
+                var location = new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    TotalPage = total,
+                    Data = new LocationVM
+                    {
+                        Id = item.Id,
+                        Province = item.Province
+                    }
+                };
+                list.Add(location);
+            }
+            return list;
+
         }
     }
 }

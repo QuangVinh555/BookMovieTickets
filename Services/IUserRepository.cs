@@ -9,7 +9,8 @@ namespace BookMovieTickets.Services
 {
     public interface IUserRepository
     {
-        List<MessageVM> GetAll(int page);
+        List<MessageVM> GetAllByPage(int page);
+        List<MessageVM> GetAll();
         MessageVM GetById(int id);
         MessageVM CreateUser(UserDTO dto);
         MessageVM UpdateUser(UserDTO dto, int id);

@@ -11,6 +11,7 @@ namespace BookMovieTickets.Views
         public int? RoleId { get; set; }
         public int? LoginTypeId { get; set; }
         public int? UserRankId { get; set; }
+        public string UserRank { get; set; }
         public string Avatar { get; set; }
         public string Fullname { get; set; }
         public string Email { get; set; }

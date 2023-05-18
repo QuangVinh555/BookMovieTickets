@@ -33,35 +33,12 @@ namespace BookMovieTickets.Services
                     };
                 }
             }
-            //var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
-            //if(_role == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm RoleId"
-            //    };
-            //}
-            //var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
-            //if (_loginType == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm LoginTypeId"
-            //    };
-            //}
-            //var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
-            //if (_rankUser == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm RankUserId"
-            //    };
-            //}
+    
             byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
             string passwordEncoding = Convert.ToBase64String(bytes);
-            //_user.RoleId = _role.Id;
-            //_user.LoginTypeId = _loginType.Id;
-            //_user.UserRankId = _rankUser.Id;
+            _user.RoleId = dto.RoleId;
+            _user.LoginTypeId = dto.LoginTypeId;
+            _user.UserRankId = dto.UserRankId;
             _user.Avatar = dto.Avatar;
             _user.Fullname = dto.Fullname;
             _user.Email = dto.Email;
@@ -141,7 +118,7 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public List<MessageVM> GetAll(int page)
+        public List<MessageVM> GetAllByPage(int page)
         {
             int total = 0;
             var _listTotalUser = _context.Users.ToList();
@@ -159,6 +136,7 @@ namespace BookMovieTickets.Services
 
             foreach (var item in _listUsers)
             {
+                var _userRank = _context.UserRanks.Where(x => x.Id == item.UserRankId).SingleOrDefault();
                 var user = new MessageVM
                 {
                     Message = "Lấy dữu liệu thành công",
@@ -169,6 +147,7 @@ namespace BookMovieTickets.Services
                         RoleId = item.RoleId,
                         LoginTypeId = item.LoginTypeId,
                         UserRankId = item.UserRankId,
+                        UserRank = _userRank.Name,
                         Avatar = item.Avatar,
                         Fullname = item.Fullname,
                         Email = item.Email,
@@ -182,27 +161,6 @@ namespace BookMovieTickets.Services
                 list.Add(user);
             }
             return list;
-            //var _listUsers = _context.Users.Select(x => new MessageVM
-            //{
-            //    Message = "Lấy dữ liệu thành công",
-            //    Data = new UserVM
-            //    {
-            //        Id = x.Id,
-            //        RoleId = x.RoleId,
-            //        LoginTypeId = x.LoginTypeId,
-            //        UserRankId = x.UserRankId,
-            //        Avatar = x.Avatar,
-            //        Fullname = x.Fullname,
-            //        Email = x.Email,
-            //        Date = x.Date,
-            //        PhoneNumber = x.PhoneNumber,
-            //        Address = x.Address,
-            //        Password = x.Password,
-            //        CreatedAt = x.CreatedAt,
-
-            //    }
-            //}).ToList();
-            //return _listUsers;
         }
 
         public MessageVM GetById(int id)
@@ -239,32 +197,6 @@ namespace BookMovieTickets.Services
 
         public MessageVM UpdateUser(UserDTO dto, int id)
         {
-            //var _role = _context.Roles.Where(x => x.Id == dto.RoleId).SingleOrDefault();
-            //if (_role == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm RoleId"
-            //    };
-            //}
-
-            //var _loginType = _context.LoginTypes.Where(x => x.Id == dto.LoginTypeId).SingleOrDefault();
-            //if (_loginType == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm LoginTypeId"
-            //    };
-            //}
-
-            //var _rankUser = _context.UserRanks.Where(x => x.Id == dto.UserRankId).SingleOrDefault();
-            //if (_rankUser == null)
-            //{
-            //    return new MessageVM
-            //    {
-            //        Message = "Lỗi khi tìm RankUserId"
-            //    };
-            //}
 
             try
             {
@@ -317,6 +249,41 @@ namespace BookMovieTickets.Services
                     Message = e.Message
                 };
             }
+        }
+
+        public List<MessageVM> GetAll()
+        {
+            var _listUsers = _context.Users.Where(x => x.RoleId == 1 && x.Deleted == false).ToList();
+
+            List<MessageVM> list = new List<MessageVM>();
+
+            foreach (var item in _listUsers)
+            {
+                var _userRank = _context.UserRanks.Where(x => x.Id == item.UserRankId).SingleOrDefault();
+
+                var user = new MessageVM
+                {
+                    Message = "Lấy dữu liệu thành công",
+                    Data = new UserVM
+                    {
+                        Id = item.Id,
+                        RoleId = item.RoleId,
+                        LoginTypeId = item.LoginTypeId,
+                        UserRankId = item.UserRankId,
+                        UserRank = _userRank.Name,
+                        Avatar = item.Avatar,
+                        Fullname = item.Fullname,
+                        Email = item.Email,
+                        Date = item.Date,
+                        PhoneNumber = item.PhoneNumber,
+                        Address = item.Address,
+                        Password = item.Password,
+                        CreatedAt = item.CreatedAt,
+                    }
+                };
+                list.Add(user);
+            }
+            return list;
         }
     }
 }

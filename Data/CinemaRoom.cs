@@ -16,6 +16,7 @@ namespace BookMovieTickets.Data
         public int Id { get; set; }
         public int? CinemaNameId { get; set; }
         public string Name { get; set; }
+        public int? NumChair { get; set; }
 
         public virtual CinemaName CinemaName { get; set; }
         public virtual ICollection<Chair> Chairs { get; set; }

@@ -18,10 +18,11 @@ namespace BookMovieTickets.Services
         }
         public MessageVM CreateCinemaRoom(CinemaRoomDTO dto)
         {
+
             var _cinemaRoom = new CinemaRoom();
             var _listCinemaRooms = _context.CinemaRooms.ToList();
             var _cinemaName = _context.CinemaNames.Where(x => x.Id == dto.CinemaNameId).SingleOrDefault();
-            if(_cinemaName == null)
+            if (_cinemaName == null)
             {
                 return new MessageVM
                 {
@@ -32,7 +33,7 @@ namespace BookMovieTickets.Services
             {
                 foreach (var cinemaRoom in _listCinemaRooms)
                 {
-                    if(_cinemaName.Id == cinemaRoom.CinemaNameId)
+                    if (_cinemaName.Id == cinemaRoom.CinemaNameId)
                     {
                         if (string.Compare(cinemaRoom.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
                         {
@@ -45,8 +46,91 @@ namespace BookMovieTickets.Services
                 }
                 _cinemaRoom.CinemaNameId = _cinemaName.Id;
                 _cinemaRoom.Name = dto.Name;
+                _cinemaRoom.NumChair = dto.NumChair;
                 _context.Add(_cinemaRoom);
                 _context.SaveChanges();
+
+                try
+                {
+                    var _cinemaRoomNew = _context.CinemaRooms.Where(x => x.Id == _cinemaRoom.Id).SingleOrDefault();
+                    int _chairType = 0;
+                    var _nameChair = "";
+                    int a = 1, b = 1, c = 1, d = 1, e = 1, f = 1, g = 1, h = 1, s = 1;
+                    for (int i = 1; i <= _cinemaRoomNew.NumChair; i++)
+                    {
+                        if (i <= 64)
+                        {
+                            _chairType = 1;
+                            if (i <= 16)
+                            {
+                                _nameChair = "A" + a;
+                                a++;
+                            }
+                            else if (i > 16 && i <= 32)
+                            {
+                                _nameChair = "B" + b;
+                                b++;
+                            }
+                            else if (i > 32 && i <= 48)
+                            {
+                                _nameChair = "C" + c;
+                                c++;
+                            }
+                            else if (i > 48 && i <= 64)
+                            {
+                                _nameChair = "D" + d;
+                                d++;
+                            }
+                        }
+                        else if (i > 64 && i <= 128)
+                        {
+                            _chairType = 2;
+                            if (i <= 64)
+                            {
+                                _nameChair = "E" + e;
+                                e++;
+                            }
+                            else if (i > 64 && i <= 80)
+                            {
+                                _nameChair = "F" + f;
+                                f++;
+                            }
+                            else if (i > 80 && i <= 96)
+                            {
+                                _nameChair = "G" + g;
+                                g++;
+                            }
+                            else if (i > 112 && i <= 128)
+                            {
+                                _nameChair = "H" + h;
+                                h++;
+                            }
+                        }
+                        else
+                        {
+                            _chairType = 3;
+                            _nameChair = "S" + s + " " + "S" + ++s;
+                            s++;
+                        }
+                        ChairDTO _chairDTO = new ChairDTO
+                        {
+                            CinemaRoomId = _cinemaRoom.Id,
+                            ChairTypeId = _chairType,
+                            Name = _nameChair
+                        };
+                        ChairRepository _chairRepository = new ChairRepository(_context);
+                        _chairRepository.CreateChair(_chairDTO);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.InnerException.Message);
+                    return new MessageVM
+                    {
+                        Message = e.Message,
+                    };
+                }
+
                 return new MessageVM
                 {
                     Message = "Thêm phòng chiếu thành công",
@@ -54,16 +138,80 @@ namespace BookMovieTickets.Services
                     {
                         Id = _cinemaRoom.Id,
                         Name = _cinemaRoom.Name,
-                        CinemaNameId = _cinemaRoom.CinemaNameId
+                        CinemaNameId = _cinemaRoom.CinemaNameId,
+                        NumChair = _cinemaRoom.NumChair
                     }
                 };
             }
-            
+
+
+
+            //var _cinemaRoom = new CinemaRoom();
+            //var _listCinemaRooms = _context.CinemaRooms.ToList();
+            //var _cinemaName = _context.CinemaNames.Where(x => x.Id == dto.CinemaNameId).SingleOrDefault();
+            //if(_cinemaName == null)
+            //{
+            //    return new MessageVM
+            //    {
+            //        Message = "Phải điền thông tin rạp cho phòng chiếu này"
+            //    };
+            //}
+            //else
+            //{
+            //    foreach (var cinemaRoom in _listCinemaRooms)
+            //    {
+            //        if(_cinemaName.Id == cinemaRoom.CinemaNameId)
+            //        {
+            //            if (string.Compare(cinemaRoom.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
+            //            {
+            //                return new MessageVM
+            //                {
+            //                    Message = "Tên đã tồn tại"
+            //                };
+            //            }
+            //        }
+            //    }
+            //    _cinemaRoom.CinemaNameId = _cinemaName.Id;
+            //    _cinemaRoom.Name = dto.Name;
+            //    _context.Add(_cinemaRoom);
+            //    _context.SaveChanges();
+            //    return new MessageVM
+            //    {
+            //        Message = "Thêm phòng chiếu thành công",
+            //        Data = new CinemaRoomVM
+            //        {
+            //            Id = _cinemaRoom.Id,
+            //            Name = _cinemaRoom.Name,
+            //            CinemaNameId = _cinemaRoom.CinemaNameId
+            //        }
+            //    };
+            //}
+
         }
 
         public MessageVM DeleteCinemaRoom(int id)
         {
-            throw new NotImplementedException();
+            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == id).SingleOrDefault();
+            if(_cinemaRoom != null)
+            {
+                var _showTime = _context.ShowTimes.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
+                var _chair = _context.Chairs.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
+                _context.RemoveRange(_showTime);
+                _context.RemoveRange(_chair);
+                _context.Remove(_cinemaRoom);
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Xóa dữ liệu thành công",
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy dữ liệu"
+                };
+            }
         }
 
         public List<MessageVM> GetAll()
@@ -75,7 +223,9 @@ namespace BookMovieTickets.Services
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    CinemaNameId = x.CinemaNameId
+                    CinemaNameId = x.CinemaNameId,
+                    NumChair = x.NumChair
+
                 }
             }).ToList();
             return _listCinemaRooms;
@@ -94,7 +244,8 @@ namespace BookMovieTickets.Services
                     {
                         Id = item.Id,
                         CinemaNameId = item.CinemaNameId,
-                        Name = item.Name
+                        Name = item.Name,
+                        NumChair = item.NumChair
                     }
                 };
                 list.Add(cinemaRoom);
@@ -114,7 +265,9 @@ namespace BookMovieTickets.Services
                     {
                         Id = _cinemaRoom.Id,
                         Name = _cinemaRoom.Name,
-                        CinemaNameId = _cinemaRoom.CinemaNameId
+                        CinemaNameId = _cinemaRoom.CinemaNameId,
+                        NumChair = _cinemaRoom.NumChair
+
                     }
                 };
             }
@@ -134,23 +287,114 @@ namespace BookMovieTickets.Services
             var _listCinemaRooms = _context.CinemaRooms.ToList();
             if (_cinemaRoom != null)
             {
-                foreach (var cinemaRoom in _listCinemaRooms)
+                //foreach (var cinemaRoom in _listCinemaRooms)
+                //{
+                //    if (cinemaRoom.CinemaNameId == _cinemaName.Id)
+                //    {
+                //        if (string.Compare(cinemaRoom.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                //        {
+                //            return new MessageVM
+                //            {
+                //                Message = "Tên đã tồn tại"
+                //            };
+                //        }
+                //    }
+                //}
+            
+               
+
+                if(dto.NumChair > _cinemaRoom.NumChair || dto.NumChair < _cinemaRoom.NumChair || _cinemaRoom.NumChair == null)
                 {
-                    if (cinemaRoom.CinemaNameId == _cinemaName.Id)
+                    var _listChairs = _context.Chairs.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
+                    _context.Chairs.RemoveRange(_listChairs);
+                    _context.SaveChanges();
+
+                    try
                     {
-                        if (string.Compare(cinemaRoom.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                        int _chairType = 0;
+                        var _nameChair = "";
+                        int a = 1, b = 1, c = 1, d = 1, e = 1, f = 1, g = 1, h = 1, s = 1;
+                        for (int i = 1; i <= dto.NumChair; i++)
                         {
-                            return new MessageVM
+                            if (i <= 64)
                             {
-                                Message = "Tên đã tồn tại"
+                                _chairType = 1;
+                                if (i <= 16)
+                                {
+                                    _nameChair = "A" + a;
+                                    a++;
+                                }
+                                else if (i > 16 && i <= 32)
+                                {
+                                    _nameChair = "B" + b;
+                                    b++;
+                                }
+                                else if (i > 32 && i <= 48)
+                                {
+                                    _nameChair = "C" + c;
+                                    c++;
+                                }
+                                else if (i > 48 && i <= 64)
+                                {
+                                    _nameChair = "D" + d;
+                                    d++;
+                                }
+                            }
+                            else if (i > 64 && i <= 128)
+                            {
+                                _chairType = 2;
+                                if (i <= 64)
+                                {
+                                    _nameChair = "E" + e;
+                                    e++;
+                                }
+                                else if (i > 64 && i <= 80)
+                                {
+                                    _nameChair = "F" + f;
+                                    f++;
+                                }
+                                else if (i > 80 && i <= 96)
+                                {
+                                    _nameChair = "G" + g;
+                                    g++;
+                                }
+                                else if (i > 112 && i <= 128)
+                                {
+                                    _nameChair = "H" + h;
+                                    h++;
+                                }
+                            }
+                            else
+                            {
+                                _chairType = 3;
+                                _nameChair = "S" + s + " " + "S" + ++s;
+                                s++;
+                            }
+                            ChairDTO _chairDTO = new ChairDTO
+                            {
+                                CinemaRoomId = _cinemaRoom.Id,
+                                ChairTypeId = _chairType,
+                                Name = _nameChair
                             };
+                            ChairRepository _chairRepository = new ChairRepository(_context);
+                            _chairRepository.CreateChair(_chairDTO);
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.InnerException.Message);
+                        return new MessageVM
+                        {
+                            Message = e.Message,
+                        };
+                    }
                 }
-            
+               
                 _cinemaRoom.Name = dto.Name;
                 _cinemaRoom.CinemaNameId = _cinemaName.Id;
+                _cinemaRoom.NumChair = dto.NumChair;
                 _context.SaveChanges();
+    
                 return new MessageVM
                 {
                     Message = "Cập nhật phòng chiếu thành công",

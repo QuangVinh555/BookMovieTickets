@@ -9,5 +9,6 @@ namespace BookMovieTickets.Models
     {
         public int? CinemaNameId { get; set; }
         public string Name { get; set; }
+        public int? NumChair { get; set; }
     }
 }

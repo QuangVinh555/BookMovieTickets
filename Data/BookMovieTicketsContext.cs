@@ -45,7 +45,8 @@ namespace BookMovieTickets.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                }
+
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -295,6 +296,8 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.Name)
                     .HasMaxLength(250)
                     .HasColumnName("name");
+
+                entity.Property(e => e.NumChair).HasColumnName("num_chair");
 
                 entity.HasOne(d => d.CinemaName)
                     .WithMany(p => p.CinemaRooms)

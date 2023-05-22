@@ -10,5 +10,7 @@ namespace BookMovieTickets.Views
         public int Id { get; set; }
         public int? CinemaNameId { get; set; }
         public string Name { get; set; }
+        public int? NumChair { get; set; }
+
     }
 }

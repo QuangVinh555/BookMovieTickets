@@ -84,5 +84,18 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCinemaRoom(int id)
+        {
+            try
+            {
+                return Ok(_cinemaRoomRepository.DeleteCinemaRoom(id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

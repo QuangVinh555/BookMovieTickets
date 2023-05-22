@@ -81,6 +81,27 @@ namespace BookMovieTickets.Services
             return _listCinemaRooms;
         }
 
+        public List<MessageVM> GetAllByCinemaNameId(int cinemaNameId)
+        {
+            var _listCinemaRooms = _context.CinemaRooms.Where(x => x.CinemaNameId == cinemaNameId).ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var item in _listCinemaRooms)
+            {
+                var cinemaRoom = new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new CinemaRoomVM
+                    {
+                        Id = item.Id,
+                        CinemaNameId = item.CinemaNameId,
+                        Name = item.Name
+                    }
+                };
+                list.Add(cinemaRoom);
+            }
+            return list;
+        }
+
         public MessageVM GetById(int id)
         {
             var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == id).SingleOrDefault();

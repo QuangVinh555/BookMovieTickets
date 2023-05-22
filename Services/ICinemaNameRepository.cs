@@ -9,7 +9,10 @@ namespace BookMovieTickets.Services
 {
     public interface ICinemaNameRepository
     {
+        List<MessageVM> GetById(int? locationId, int? cinemaTypeId);
+        List<MessageVM> GetAllByPage(int page);
         MessageVM CreateCinemaName(CinemaNameDTO dto);
-        List<MessageVM> GetAll();
+        MessageVM UpdateCinemaName(CinemaNameDTO dto, int id);
+        MessageVM DeleteCinemaName(int id);
     }
 }

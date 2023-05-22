@@ -59,6 +59,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/CinemaRoom/CinemaName")]
+        public IActionResult GetAllByCinemaNameId(int cinemaNameId)
+        {
+            try
+            {
+                return Ok(_cinemaRoomRepository.GetAllByCinemaNameId(cinemaNameId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateCinemaRoom(CinemaRoomDTO dto, int id)
         {

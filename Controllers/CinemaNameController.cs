@@ -34,11 +34,50 @@ namespace BookMovieTickets.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetById(int locationId, int cinemaTypeId)
         {
             try
             {
-                return Ok(_cinemaNameRepository.GetAll());
+                return Ok(_cinemaNameRepository.GetById(locationId, cinemaTypeId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("/api/cinemaName/page")]
+        public IActionResult GetAllByPage(int page)
+        {
+            try
+            {
+                return Ok(_cinemaNameRepository.GetAllByPage(page));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateCinemaName(CinemaNameDTO dto, int id)
+        {
+            try
+            {
+                return Ok(_cinemaNameRepository.UpdateCinemaName(dto, id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCinemaName(int id)
+        {
+            try
+            {
+                return Ok(_cinemaNameRepository.DeleteCinemaName(id));
             }
             catch
             {

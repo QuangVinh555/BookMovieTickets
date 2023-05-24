@@ -59,6 +59,32 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("datebig")]
+        public IActionResult GetMovieByDateBigger(DateTime id)
+        {
+            try
+            {
+                return Ok(_movieRepository.GetMovieByDateBigger(id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("datesmall")]
+        public IActionResult GetMovieByDateSmaller(DateTime id)
+        {
+            try
+            {
+                return Ok(_movieRepository.GetMovieByDateSmaller(id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateMovie(MovieDTO dto, int id)
         {

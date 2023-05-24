@@ -34,6 +34,7 @@ namespace BookMovieTickets.Data
         public string Actor { get; set; }
         public string Category { get; set; }
         public double? TotalPercent { get; set; }
+        public string LinkTrailer { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Banner> Banners { get; set; }

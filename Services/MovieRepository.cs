@@ -51,7 +51,15 @@ namespace BookMovieTickets.Services
             _movie.Actor = dto.Actor;
             _movie.Producer = dto.Producer;
             _movie.Category = dto.Category;
+            _movie.LinkTrailer = dto.LinkTrailer;
             _context.Add(_movie);
+            _context.SaveChanges();
+            var _movieNew = _context.Movies.Where(x => x.Id == _movie.Id).SingleOrDefault();
+            var _banner = new Banner();
+            _banner.MovieId = _movieNew.Id;
+            _banner.MainSlide = dto.MainSlide;
+            _banner.ContainerSlide = dto.ContainerSlide;
+            _context.Banners.Add(_banner);
             _context.SaveChanges();
             return new MessageVM { 
                 Message = "Thêm thành công",
@@ -78,41 +86,76 @@ namespace BookMovieTickets.Services
 
         public MessageVM DeleteMovie(int id)
         {
-            throw new NotImplementedException();
+            var _movie = _context.Movies.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
+            if(_movie != null)
+            {
+                _movie.Deleted = true;
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Xóa dữ liệu thành công"
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy dữ liệu của thông tin này!"
+                };
+            }
         }
 
         public List<MessageVM> GetAll()
         {
-            var _listMovies = _context.Movies.Select(x => new MessageVM
+            try
             {
-                Message = "Lấy dữ liệu thành công",
-                Data = new MovieVM
+                var _listMovies = _context.Movies.Where(x => x.Deleted == false).ToList();
+                List<MessageVM> list = new List<MessageVM>();
+                foreach (var x in _listMovies)
                 {
-                    Id = x.Id,
-                    UserId = x.UserId,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Content = x.Content,
-                    Stamp = x.Stamp,
-                    Nation = x.Nation,
-                    MovieDuration = x.MovieDuration,
-                    PremiereDate = x.PremiereDate,
-                    PremiereYear = x.PremiereYear,
-                    Author = x.Author,
-                    Actor = x.Actor,
-                    Producer = x.Producer,
-                    Category = x.Category,
-                    TotalPercent = x.TotalPercent
+                    var _banner = _context.Banners.Where(y => y.MovieId == x.Id).SingleOrDefault();
+                    var _movie = new MessageVM
+                    {
+                        Message = "Lấy dữ liệu thành công",
+                        Data = new MovieVM
+                        {
+                            Id = x.Id,
+                            UserId = x.UserId,
+                            Name = x.Name,
+                            Description = x.Description,
+                            Content = x.Content,
+                            Stamp = x.Stamp,
+                            Nation = x.Nation,
+                            MovieDuration = x.MovieDuration,
+                            PremiereDate = x.PremiereDate,
+                            PremiereYear = x.PremiereYear,
+                            Author = x.Author,
+                            Actor = x.Actor,
+                            Producer = x.Producer,
+                            Category = x.Category,
+                            TotalPercent = x.TotalPercent,
+                            LinkTrailer = x.LinkTrailer,
+                            MainSlide = _banner != null ? _banner.MainSlide : "",
+                            ContainerSlide = _banner != null ?_banner.ContainerSlide : ""
+                        }
+                    };
+                    list.Add(_movie);
                 }
-            }).ToList();
-            return _listMovies;
+
+                return list;
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.InnerException.Message);
+                return null;
+            }
         }
 
         public MessageVM GetById(int id)
         {
-            var _movie = _context.Movies.Where(x => x.Id == id).SingleOrDefault();
+            var _movie = _context.Movies.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             if(_movie != null)
             {
+                var _banner = _context.Banners.Where(x => x.MovieId == _movie.Id).SingleOrDefault();
                 return new MessageVM
                 {
                     Message = "Lấy dữ liệu thành công",
@@ -132,7 +175,11 @@ namespace BookMovieTickets.Services
                         Actor = _movie.Actor,
                         Producer = _movie.Producer,
                         Category = _movie.Category,
-                        TotalPercent = _movie.TotalPercent
+                        TotalPercent = _movie.TotalPercent,
+                        LinkTrailer = _movie.LinkTrailer,
+                        MainSlide = _banner != null ? _banner.MainSlide : "",
+                        ContainerSlide = _banner != null ? _banner.ContainerSlide : ""
+
                     }
                 };
             }
@@ -145,9 +192,89 @@ namespace BookMovieTickets.Services
             }
         }
 
+        public List<MessageVM> GetMovieByDateBigger(DateTime id)
+        {
+            var _listMovies = _context.Movies.ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var x in _listMovies)
+            {
+                if(x.PremiereDate > id && x.Deleted == false)
+                {
+                    var _banner = _context.Banners.Where(y => y.MovieId == x.Id).SingleOrDefault();
+                    var _movie = new MessageVM
+                    {
+                        Message = "Phim sắp chiếu",
+                        Data = new MovieVM
+                        {
+                            Id = x.Id,
+                            UserId = x.UserId,
+                            Name = x.Name,
+                            Description = x.Description,
+                            Content = x.Content,
+                            Stamp = x.Stamp,
+                            Nation = x.Nation,
+                            MovieDuration = x.MovieDuration,
+                            PremiereDate = x.PremiereDate,
+                            PremiereYear = x.PremiereYear,
+                            Author = x.Author,
+                            Actor = x.Actor,
+                            Producer = x.Producer,
+                            Category = x.Category,
+                            TotalPercent = x.TotalPercent,
+                            LinkTrailer = x.LinkTrailer,
+                            MainSlide = _banner != null ? _banner.MainSlide : "",
+                            ContainerSlide = _banner != null ? _banner.ContainerSlide : ""
+                        }
+                    };
+                    list.Add(_movie);
+                }
+            }
+            return list;
+        }
+
+        public List<MessageVM> GetMovieByDateSmaller(DateTime id)
+        {
+            var _listMovies = _context.Movies.ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var x in _listMovies)
+            {
+                if (x.PremiereDate <= id && x.Deleted == false)
+                {
+                    var _banner = _context.Banners.Where(y => y.MovieId == x.Id).SingleOrDefault();
+                    var _movie = new MessageVM
+                    {
+                        Message = "Phim đang chiếu",
+                        Data = new MovieVM
+                        {
+                            Id = x.Id,
+                            UserId = x.UserId,
+                            Name = x.Name,
+                            Description = x.Description,
+                            Content = x.Content,
+                            Stamp = x.Stamp,
+                            Nation = x.Nation,
+                            MovieDuration = x.MovieDuration,
+                            PremiereDate = x.PremiereDate,
+                            PremiereYear = x.PremiereYear,
+                            Author = x.Author,
+                            Actor = x.Actor,
+                            Producer = x.Producer,
+                            Category = x.Category,
+                            TotalPercent = x.TotalPercent,
+                            LinkTrailer = x.LinkTrailer,
+                            MainSlide = _banner != null ? _banner.MainSlide : "",
+                            ContainerSlide = _banner != null ? _banner.ContainerSlide : ""
+                        }
+                    };
+                    list.Add(_movie);
+                }
+            }
+            return list;
+        }
+
         public MessageVM UpdateMovie(MovieDTO dto, int id)
         {
-            var _movie = _context.Movies.Where(x => x.Id == id).SingleOrDefault();
+            var _movie = _context.Movies.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             var _user = _context.Users.Where(x => x.Id == dto.UserId).SingleOrDefault();
             if (_user.RoleId != 2)
             {
@@ -171,7 +298,11 @@ namespace BookMovieTickets.Services
                 _movie.Actor = dto.Actor;
                 _movie.Producer = dto.Producer;
                 _movie.Category = dto.Category;
-
+                _movie.LinkTrailer = dto.LinkTrailer;
+                _context.SaveChanges();
+                var _banner = _context.Banners.Where(x => x.MovieId == _movie.Id).SingleOrDefault();
+                _banner.MainSlide = dto.MainSlide;
+                _banner.ContainerSlide = dto.ContainerSlide;
                 _context.SaveChanges();
                 return new MessageVM
                 {
@@ -192,7 +323,9 @@ namespace BookMovieTickets.Services
                         Actor = _movie.Actor,
                         Producer = _movie.Producer,
                         Category = _movie.Category,
-                        TotalPercent = _movie.TotalPercent
+                        TotalPercent = _movie.TotalPercent,
+                        MainSlide = _banner.MainSlide,
+                        ContainerSlide = _banner.ContainerSlide
                     }
                 };
             }

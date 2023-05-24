@@ -11,6 +11,8 @@ namespace BookMovieTickets.Services
     {
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
+        List<MessageVM> GetMovieByDateBigger(DateTime id);
+        List<MessageVM> GetMovieByDateSmaller(DateTime id);
         MessageVM CreateMovie(MovieDTO dto);
         MessageVM UpdateMovie(MovieDTO dto, int id);
         MessageVM DeleteMovie(int id);

@@ -478,6 +478,11 @@ namespace BookMovieTickets.Data
                     .HasMaxLength(2000)
                     .HasColumnName("description");
 
+                entity.Property(e => e.LinkTrailer)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("link_trailer");
+
                 entity.Property(e => e.MovieDuration).HasColumnName("movie_duration");
 
                 entity.Property(e => e.Name)

@@ -21,7 +21,9 @@ namespace BookMovieTickets.Models
         public string Actor { get; set; }
         public string Category { get; set; }
         public double? TotalPercent { get; set; }
-
+        public string LinkTrailer { get; set; }
+        public string MainSlide { get; set; }
+        public string ContainerSlide { get; set; }
 
     }
 }

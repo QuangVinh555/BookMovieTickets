@@ -60,10 +60,10 @@ namespace BookMovieTickets.Services
 
         public MessageVM DeleteChair(int id)
         {
-            var _chair = _context.Chairs.Where(x => x.Id == id).SingleOrDefault();
+            var _chair = _context.Chairs.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             if(_chair != null)
             {
-                _context.Remove(_chair);
+                _chair.Deleted = true;
                 _context.SaveChanges();
                 var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _chair.CinemaRoomId).SingleOrDefault();
                 _cinemaRoom.NumChair--;
@@ -84,7 +84,7 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetAll()
         {
-            var _listChairs = _context.Chairs.Where(x => x.Deleted == false).ToList();
+            var _listChairs = _context.Chairs.Where(x => x.Deleted == false && x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
             foreach (var item in _listChairs)
             {
@@ -108,7 +108,7 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetByCinemaRoomId(int cinemaRoomId)
         {
-            var _listChairs = _context.Chairs.Where(x => x.CinemaRoomId == cinemaRoomId).ToList();
+            var _listChairs = _context.Chairs.Where(x => x.CinemaRoomId == cinemaRoomId && x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
             foreach (var item in _listChairs)
             {
@@ -131,7 +131,7 @@ namespace BookMovieTickets.Services
 
         public MessageVM GetById(int id)
         {
-            var _chair = _context.Chairs.Where(x => x.Id == id).SingleOrDefault();
+            var _chair = _context.Chairs.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             if(_chair != null)
             {
                 return new MessageVM
@@ -158,7 +158,7 @@ namespace BookMovieTickets.Services
 
         public MessageVM UpdateChair(ChairDTO dto, int id)
         {
-            var _chair = _context.Chairs.Where(x => x.Id == id).SingleOrDefault();
+            var _chair = _context.Chairs.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             if (_chair != null)
             {
                 var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();

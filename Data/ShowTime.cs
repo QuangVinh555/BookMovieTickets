@@ -14,7 +14,6 @@ namespace BookMovieTickets.Data
         }
 
         public int Id { get; set; }
-        public int? CinemaRoomId { get; set; }
         public int? MovieId { get; set; }
         public DateTime? ShowDate { get; set; }
         public double? TicketPrice { get; set; }
@@ -22,8 +21,9 @@ namespace BookMovieTickets.Data
         public bool? Deleted { get; set; }
         public string Role { get; set; }
         public bool? State { get; set; }
+        public int? CinemaNameId { get; set; }
 
-        public virtual CinemaRoom CinemaRoom { get; set; }
+        public virtual CinemaName CinemaName { get; set; }
         public virtual Movie Movie { get; set; }
         public virtual ICollection<BookTicket> BookTickets { get; set; }
         public virtual ICollection<HourTime> HourTimes { get; set; }

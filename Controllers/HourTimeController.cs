@@ -72,6 +72,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("cinemaRoom")]
+        public IActionResult GetHourByCinemaRoomId(int cinemaRoom_id, int showTime_id)
+        {
+            try
+            {
+                return Ok(_hourTimeRepository.GetHourByCinemaRoomId(cinemaRoom_id, showTime_id));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateRole(HourTimeDTO dto, int id)
         {

@@ -29,7 +29,7 @@ namespace BookMovieTickets.Services
                     if (showtime.State == false)
                     {
                         _showTime.Id = _context.ShowTimes.Where(x => x.Id == showtime.Id).SingleOrDefault().Id;
-                        _showTime.CinemaRoomId = null;
+                        _showTime.CinemaNameId = null;
                         _showTime.MovieId = null;
                         _showTime.ShowDate = null;
                         _showTime.TicketPrice = null;
@@ -39,11 +39,15 @@ namespace BookMovieTickets.Services
                         _context.SaveChanges();
                         return new MessageVM
                         {
-                            Message = "Tạo thành công suất chiếu có sẵn"
+                            Message = "Tạo thành công suất chiếu có sẵn",
+                            Data = new ShowTimeVM
+                            {
+                                Id = _showTime.Id
+                            }
                         };
                     }
                 }
-                _showTime.CinemaRoomId = null;
+                _showTime.CinemaNameId = null;
                 _showTime.MovieId = null;
                 _showTime.ShowDate = null;
                 _showTime.TicketPrice = null;
@@ -55,7 +59,11 @@ namespace BookMovieTickets.Services
 
                 return new MessageVM
                 {
-                    Message = "Tạo thành công suất chiếu"
+                    Message = "Tạo thành công suất chiếu",
+                    Data = new ShowTimeVM
+                    {
+                        Id = _showTime.Id
+                    }
                 };
             }
             catch (Exception e)
@@ -110,8 +118,7 @@ namespace BookMovieTickets.Services
             foreach (var item in _listShowTimes)
             {
                 var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
-                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == item.CinemaRoomId).SingleOrDefault();
-                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
                 var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
                 var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
                 var _showTime = new MessageVM
@@ -124,8 +131,43 @@ namespace BookMovieTickets.Services
                         CinemaType = _cinemaType.Name,
                         CinemaName = _cinemaName.Name,
                         LocationDetail = _cinemaName.LocationDetail,
-                        CinemaRoom = _cinemaRoom.Name,
                         Movie = _movie.Name,
+                        ShowDate = item.ShowDate,
+                        TicketPrice = item.TicketPrice,
+                        NumTicket = item.NumTicket,
+                        Role = item.Role
+                    }
+                };
+                list.Add(_showTime);
+            }
+            return list;
+        }
+
+        public List<MessageVM> GetByCinemaNameIdAndDate(int cinemaName_id, DateTime date)
+        {
+            var _listShowTimes = _context.ShowTimes.Where(x => x.CinemaNameId == cinemaName_id && x.ShowDate == date).ToList();
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var item in _listShowTimes)
+            {
+                var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                var _banner = _context.Banners.Where(x => x.MovieId == _movie.Id).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
+                var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+                var _showTime = new MessageVM
+                {
+                    Message = " Lấy dữ liệu thành công",
+                    Data = new ShowTimeVM
+                    {
+                        Id = item.Id,
+                        Location = _location.Province,
+                        CinemaType = _cinemaType.Name,
+                        CinemaName = _cinemaName.Name,
+                        LocationDetail = _cinemaName.LocationDetail,
+                        Name = _movie.Name,
+                        MainSlide = _banner.MainSlide,
+                        Category = _movie.Category,
+                        Author = _movie.Author,
                         ShowDate = item.ShowDate,
                         TicketPrice = item.TicketPrice,
                         NumTicket = item.NumTicket,
@@ -141,8 +183,7 @@ namespace BookMovieTickets.Services
         {
             var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
             var _movie = _context.Movies.Where(x => x.Id == _showTime.MovieId).SingleOrDefault();
-            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
-            var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+            var _cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
             var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
             var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
             if (_showTime != null)
@@ -157,7 +198,6 @@ namespace BookMovieTickets.Services
                         CinemaType = _cinemaType.Name,
                         CinemaName = _cinemaName.Name,
                         LocationDetail = _cinemaName.LocationDetail,
-                        CinemaRoom = _cinemaRoom.Name,
                         Movie = _movie.Name,
                         ShowDate = _showTime.ShowDate,
                         TicketPrice = _showTime.TicketPrice,
@@ -184,8 +224,7 @@ namespace BookMovieTickets.Services
                 foreach (var item in _listShowTimes)
                 {
                     var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
-                    var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == item.CinemaRoomId).SingleOrDefault();
-                    var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                    var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
                     var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
                     var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
                     var _showTime = new MessageVM
@@ -198,7 +237,6 @@ namespace BookMovieTickets.Services
                             CinemaType = _cinemaType.Name,
                             CinemaName = _cinemaName.Name,
                             LocationDetail = _cinemaName.LocationDetail,
-                            CinemaRoom = _cinemaRoom.Name,
                             Movie = _movie.Name,
                             ShowDate = item.ShowDate,
                             TicketPrice = item.TicketPrice,
@@ -227,8 +265,7 @@ namespace BookMovieTickets.Services
             {
                 var _showTime = _context.ShowTimes.Where(x => x.State == false).SingleOrDefault();
                 var _movie = _context.Movies.Where(x => x.Id == dto.MovieId).SingleOrDefault();
-                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();
-                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == dto.CinemaNameId).SingleOrDefault();
                 var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
                 var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
                 //DateTime datetime = DateTime.ParseExact(dto.ShowDate.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -241,14 +278,14 @@ namespace BookMovieTickets.Services
                             Message = "Nhập sai thông tin id movie",
                         };
                     }
-                    if (_cinemaRoom == null)
+                    if (_cinemaName == null)
                     {
                         return new MessageVM
                         {
                             Message = "Nhập sai thông tin id cinemaRoom",
                         };
                     }
-                    _showTime.CinemaRoomId = _cinemaRoom.Id;
+                    _showTime.CinemaNameId = _cinemaName.Id;
                     _showTime.MovieId = _movie.Id;
                     _showTime.ShowDate = dto.ShowDate;
                     _showTime.TicketPrice = dto.TicketPrice;
@@ -266,7 +303,6 @@ namespace BookMovieTickets.Services
                             CinemaType = _cinemaType.Name,
                             CinemaName = _cinemaName.Name,
                             LocationDetail = _cinemaName.LocationDetail,
-                            CinemaRoom = _cinemaRoom.Name,
                             Movie = _movie.Name,
                             ShowDate = _showTime.ShowDate,
                             TicketPrice = _showTime.TicketPrice,
@@ -297,8 +333,7 @@ namespace BookMovieTickets.Services
         {
             var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
             var _movie = _context.Movies.Where(x => x.Id == dto.MovieId).SingleOrDefault();
-            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == dto.CinemaRoomId).SingleOrDefault();
-            var _cinemaName = _context.CinemaNames.Where(x => x.Id == _cinemaRoom.CinemaNameId).SingleOrDefault();
+            var _cinemaName = _context.CinemaNames.Where(x => x.Id == dto.CinemaNameId).SingleOrDefault();
             var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
             var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
             if (_showTime != null)
@@ -310,14 +345,14 @@ namespace BookMovieTickets.Services
                         Message = "Nhập sai thông tin id movie",
                     };
                 }
-                if (_cinemaRoom == null)
+                if (_cinemaName == null)
                 {
                     return new MessageVM
                     {
                         Message = "Nhập sai thông tin id cinemaRoom",
                     };
                 }
-                _showTime.CinemaRoomId = _cinemaRoom.Id;
+                _showTime.CinemaNameId = _cinemaName.Id;
                 _showTime.MovieId = _movie.Id;
                 _showTime.ShowDate = dto.ShowDate;
                 _showTime.TicketPrice = dto.TicketPrice;
@@ -335,7 +370,6 @@ namespace BookMovieTickets.Services
                         CinemaType = _cinemaType.Name,
                         CinemaName = _cinemaName.Name,
                         LocationDetail = _cinemaName.LocationDetail,
-                        CinemaRoom = _cinemaRoom.Name,
                         Movie = _movie.Name,
                         ShowDate = _showTime.ShowDate,
                         TicketPrice = _showTime.TicketPrice,

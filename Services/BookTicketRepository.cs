@@ -32,7 +32,6 @@ namespace BookMovieTickets.Services
                 {
                     _showTime = _context.ShowTimes.Where(x => x.Id == item.ShowTimeId).SingleOrDefault();
                     _hourTime = _context.HourTimes.Where(x => x.Id == item.HourTimeId).SingleOrDefault();
-                    _roomCinema = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
                     _nameCinema = _context.CinemaNames.Where(x => x.Id == _roomCinema.CinemaNameId).SingleOrDefault();
                     _combo = _context.Combos.Where(x => x.Id == item.ComboId).SingleOrDefault();
                     var _bookTicket = new MessageVM
@@ -423,8 +422,7 @@ namespace BookMovieTickets.Services
                             _context.SaveChanges();
                         }
 
-                        var _roomCinema = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
-                        var _nameCinema = _context.CinemaNames.Where(x => x.Id == _roomCinema.CinemaNameId).SingleOrDefault();
+                        var _nameCinema = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
                         return new MessageVM
                         {
                             Message = "Đặt vé thành công",
@@ -440,7 +438,6 @@ namespace BookMovieTickets.Services
                                 Payment = _context.Payments.Where(y => y.Id == dto.PaymentId).SingleOrDefault().PaymentType,
                                 CinemaName = _nameCinema.Name,
                                 Location = _nameCinema.LocationDetail,
-                                CinemaRoom = _roomCinema.Name,
                                 TotalTicket = _bookTicket.TotalTickets,
                                 NameCombo = dto.ComboId == null ? "" : _context.Combos.Where(x => x.Id == dto.ComboId).SingleOrDefault().Name,
                                 CountCombo = dto.CountCombo == null ? 0 : dto.CountCombo,

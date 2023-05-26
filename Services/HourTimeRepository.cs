@@ -42,13 +42,14 @@ namespace BookMovieTickets.Services
                 }
             }
             _hourTime.ShowTimeId = _showTime.Id;
+            _hourTime.CinemaRoomId = dto.CinemaRoomId;
             _hourTime.Time = dto.Time;
             _hourTime.EndTime = dto.EndTime;
             _context.Add(_hourTime);
             _context.SaveChanges();
 
-            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _showTime.CinemaRoomId).SingleOrDefault();
-            var _listChairs = _context.Chairs.ToList();
+            var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
+            var _listChairs = _context.Chairs.Where(x=>x.Deleted == false).ToList();
             foreach (var item in _listChairs)
             {
                 if(item.CinemaRoomId == _cinemaRoom.Id)
@@ -67,6 +68,7 @@ namespace BookMovieTickets.Services
                 {
                     Id = _hourTime.Id,
                     ShowTimeId = _hourTime.ShowTimeId,
+                    CinemaRoomId = _hourTime.CinemaRoomId,
                     Time = _hourTime.Time,
                     EndTime = _hourTime.EndTime
                 }
@@ -103,6 +105,7 @@ namespace BookMovieTickets.Services
                 {
                     Id = x.Id,
                     ShowTimeId = x.ShowTimeId,
+                    CinemaRoomId = x.CinemaRoomId,
                     Time = x.Time,
                     EndTime = x.EndTime
                 }
@@ -122,6 +125,7 @@ namespace BookMovieTickets.Services
                     {
                         Id = _hourTime.Id,
                         ShowTimeId = _hourTime.ShowTimeId,
+                        CinemaRoomId = _hourTime.CinemaRoomId,
                         Time = _hourTime.Time,
                         EndTime = _hourTime.EndTime
                     }
@@ -145,6 +149,7 @@ namespace BookMovieTickets.Services
                 {
                     Id = x.Id,
                     ShowTimeId = x.ShowTimeId,
+                    CinemaRoomId = x.CinemaRoomId,
                     Time = x.Time,
                     EndTime = x.EndTime
                 });
@@ -161,6 +166,29 @@ namespace BookMovieTickets.Services
                     Message = "Không tìm thấy thông tin của showtime này"
                 };
             }
+        }
+
+        public List<MessageVM> GetHourByCinemaRoomId(int cinemaRoom_id, int showTime_id)
+        {
+            List<MessageVM> list = new List<MessageVM>();
+            var _listHourTimes = _context.HourTimes.Where(x => x.CinemaRoomId == cinemaRoom_id && x.ShowTimeId == showTime_id).ToList();
+            foreach (var item in _listHourTimes)
+            {
+                var _hourTime = new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new HourTimeVM
+                    {
+                        Id = item.Id,
+                        ShowTimeId = item.ShowTimeId,
+                        CinemaRoomId = item.CinemaRoomId,
+                        Time = item.Time,
+                        EndTime = item.EndTime
+                    }
+                };
+                list.Add(_hourTime);
+            }
+            return list;
         }
 
         public MessageVM UpdateHourTime(HourTimeDTO dto, int id)

@@ -403,6 +403,8 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.CinemaRoomId).HasColumnName("cinema_room_id");
+
                 entity.Property(e => e.EndTime)
                     .HasMaxLength(100)
                     .IsUnicode(false)
@@ -414,6 +416,11 @@ namespace BookMovieTickets.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("time");
+
+                entity.HasOne(d => d.CinemaRoom)
+                    .WithMany(p => p.HourTimes)
+                    .HasForeignKey(d => d.CinemaRoomId)
+                    .HasConstraintName("FK__Hour_Time__cinem__66EA454A");
 
                 entity.HasOne(d => d.ShowTime)
                     .WithMany(p => p.HourTimes)
@@ -605,7 +612,7 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CinemaRoomId).HasColumnName("cinema_room_id");
+                entity.Property(e => e.CinemaNameId).HasColumnName("cinema_name_id");
 
                 entity.Property(e => e.Deleted)
                     .HasColumnName("deleted")
@@ -627,10 +634,10 @@ namespace BookMovieTickets.Data
 
                 entity.Property(e => e.TicketPrice).HasColumnName("ticket_price");
 
-                entity.HasOne(d => d.CinemaRoom)
+                entity.HasOne(d => d.CinemaName)
                     .WithMany(p => p.ShowTimes)
-                    .HasForeignKey(d => d.CinemaRoomId)
-                    .HasConstraintName("FK__Show_Time__cinem__05D8E0BE");
+                    .HasForeignKey(d => d.CinemaNameId)
+                    .HasConstraintName("FK__Show_Time__cinem__65F62111");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowTimes)

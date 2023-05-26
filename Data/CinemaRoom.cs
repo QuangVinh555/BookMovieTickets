@@ -10,7 +10,7 @@ namespace BookMovieTickets.Data
         public CinemaRoom()
         {
             Chairs = new HashSet<Chair>();
-            ShowTimes = new HashSet<ShowTime>();
+            HourTimes = new HashSet<HourTime>();
         }
 
         public int Id { get; set; }
@@ -20,6 +20,6 @@ namespace BookMovieTickets.Data
 
         public virtual CinemaName CinemaName { get; set; }
         public virtual ICollection<Chair> Chairs { get; set; }
-        public virtual ICollection<ShowTime> ShowTimes { get; set; }
+        public virtual ICollection<HourTime> HourTimes { get; set; }
     }
 }

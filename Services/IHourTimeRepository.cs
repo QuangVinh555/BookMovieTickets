@@ -12,6 +12,7 @@ namespace BookMovieTickets.Services
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
         MessageVM GetByShowTimeId(int showtime_id);
+        List<MessageVM> GetHourByCinemaRoomId(int cinemaRoom_id, int showTime_id);
         MessageVM CreateHourTime(HourTimeDTO dto);
         MessageVM UpdateHourTime(HourTimeDTO dto, int id);
         MessageVM DeleteHourTime(int id);

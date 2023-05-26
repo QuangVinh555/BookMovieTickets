@@ -7,7 +7,7 @@ namespace BookMovieTickets.Models
 {
     public class ShowTimeDTO
     {
-        public int? CinemaRoomId { get; set; }
+        public int? CinemaNameId { get; set; }
         public int? MovieId { get; set; }
         public DateTime? ShowDate { get; set; }
         public double? TicketPrice { get; set; }

@@ -194,9 +194,9 @@ namespace BookMovieTickets.Services
             var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == id).SingleOrDefault();
             if(_cinemaRoom != null)
             {
-                var _showTime = _context.ShowTimes.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
+                var _hourTime = _context.HourTimes.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
                 var _chair = _context.Chairs.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
-                _context.RemoveRange(_showTime);
+                _context.RemoveRange(_hourTime);
                 _context.RemoveRange(_chair);
                 _context.Remove(_cinemaRoom);
                 _context.SaveChanges();

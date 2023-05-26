@@ -73,6 +73,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/ShowTime/info")]
+        public IActionResult GetByCinemaNameIdAndDate(int cinemaName_id, DateTime date)
+        {
+            try
+            {
+                return Ok(_showTimeRepository.GetByCinemaNameIdAndDate(cinemaName_id, date));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut]
         public IActionResult UpdateShowTime(ShowTimeDTO dto)
         {

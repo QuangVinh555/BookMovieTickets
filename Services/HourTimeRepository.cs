@@ -49,16 +49,13 @@ namespace BookMovieTickets.Services
             _context.SaveChanges();
 
             var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
-            var _listChairs = _context.Chairs.Where(x=>x.Deleted == false).ToList();
+            var _listChairs = _context.Chairs.Where(x=>x.Deleted == false && x.CinemaRoomId == _cinemaRoom.Id).ToList();
             foreach (var item in _listChairs)
             {
-                if(item.CinemaRoomId == _cinemaRoom.Id)
-                {
                     var _chairStatus = new ChairStatus();
                     _chairStatus.HourTimeId = _hourTime.Id;
                     _chairStatus.ChairId = item.Id;
                     _context.Add(_chairStatus);
-                }
                     _context.SaveChanges();
             }
             return new MessageVM
@@ -80,6 +77,8 @@ namespace BookMovieTickets.Services
             var _hourTime = _context.HourTimes.Where(x => x.Id == id).SingleOrDefault();
             if(_hourTime != null)
             {
+                var _listChairStatus = _context.ChairStatuses.Where(x => x.HourTimeId == _hourTime.Id).ToList();
+                _context.ChairStatuses.RemoveRange(_listChairStatus);
                 _context.Remove(_hourTime);
                 _context.SaveChanges();
                 return new MessageVM

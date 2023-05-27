@@ -98,7 +98,7 @@ namespace BookMovieTickets.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteHourTime(int id)
         {
             try

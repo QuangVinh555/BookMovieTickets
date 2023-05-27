@@ -77,43 +77,29 @@ namespace BookMovieTickets.Services
 
         public MessageVM DeleteShowTime(int id)
         {
-            var _showtime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
-            if (_showtime != null)
+            var _showtime = _context.ShowTimes.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
+            if(_showtime != null)
             {
-                if (_showtime.State == false)
+                _showtime.Deleted = true;
+                _context.SaveChanges();
+                return new MessageVM
                 {
-                    return new MessageVM
-                    {
-                        Message = "Suất chiếu chưa được tạo xong"
-                    };
-                }
-                else
-                {
-                    var _bookTicket = _context.BookTickets.Where(x => x.ShowTimeId == _showtime.Id).ToList();
-                    var _hourTime = _context.HourTimes.Where(x => x.ShowTimeId == _showtime.Id).ToList();
-                    _context.RemoveRange(_bookTicket);
-                    _context.RemoveRange(_hourTime);
-
-                    _context.Remove(_showtime);
-                    _context.SaveChanges();
-                    return new MessageVM
-                    {
-                        Message = "Đã xóa suất chiếu thành công"
-                    };
-                }
+                    Message = "Đã xóa suất chiếu thành công"
+                };
             }
             else
             {
                 return new MessageVM
                 {
-                    Message = "Không tìm thấy thông tin id này!",
+                    Message = "Không tìm thấy dữ liệu thông tin này!"
                 };
             }
+
         }
 
         public List<MessageVM> GetAll()
         {
-            var _listShowTimes = _context.ShowTimes.ToList();
+            var _listShowTimes = _context.ShowTimes.Where(x => x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
             foreach (var item in _listShowTimes)
             {
@@ -145,7 +131,7 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetByCinemaNameIdAndDate(int cinemaName_id, DateTime date)
         {
-            var _listShowTimes = _context.ShowTimes.Where(x => x.CinemaNameId == cinemaName_id && x.ShowDate == date).ToList();
+            var _listShowTimes = _context.ShowTimes.Where(x => x.CinemaNameId == cinemaName_id && x.ShowDate == date && x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
             foreach (var item in _listShowTimes)
             {
@@ -181,7 +167,7 @@ namespace BookMovieTickets.Services
 
         public MessageVM GetById(int id)
         {
-            var _showTime = _context.ShowTimes.Where(x => x.Id == id).SingleOrDefault();
+            var _showTime = _context.ShowTimes.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();
             var _movie = _context.Movies.Where(x => x.Id == _showTime.MovieId).SingleOrDefault();
             var _cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
             var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
@@ -217,7 +203,7 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetByMovieId(int movie_id)
         {
-            var _listShowTimes = _context.ShowTimes.Where(x => x.MovieId == movie_id).ToList();
+            var _listShowTimes = _context.ShowTimes.Where(x => x.MovieId == movie_id && x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
             if (_listShowTimes.Count > 0)
             {
@@ -263,7 +249,7 @@ namespace BookMovieTickets.Services
         {
             try
             {
-                var _showTime = _context.ShowTimes.Where(x => x.State == false).SingleOrDefault();
+                var _showTime = _context.ShowTimes.Where(x => x.State == false && x.Deleted == false).SingleOrDefault();
                 var _movie = _context.Movies.Where(x => x.Id == dto.MovieId).SingleOrDefault();
                 var _cinemaName = _context.CinemaNames.Where(x => x.Id == dto.CinemaNameId).SingleOrDefault();
                 var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();

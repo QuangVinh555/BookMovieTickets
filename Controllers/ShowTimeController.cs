@@ -112,7 +112,7 @@ namespace BookMovieTickets.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteRole(int id)
         {
             try

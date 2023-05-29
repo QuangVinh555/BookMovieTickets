@@ -15,6 +15,37 @@ namespace BookMovieTickets.Services
         {
             _context = context;
         }
+
+        public MessageVM DeleteChairStatus()
+        {
+            try
+            {
+                var currentDate = DateTime.Now;
+                var _listShowTimes = _context.ShowTimes.Where(x => x.ShowDate < currentDate).ToList();
+                foreach (var showTime in _listShowTimes)
+                {
+                    var _listHourTimes = _context.HourTimes.Where(x => x.ShowTimeId == showTime.Id).ToList();
+                    foreach (var hourTime in _listHourTimes)
+                    {
+                        var _listChairStatus = _context.ChairStatuses.Where(x => x.HourTimeId == hourTime.Id).ToList();
+                        _context.ChairStatuses.RemoveRange(_listChairStatus);
+                    }
+                }
+                _context.SaveChanges();
+                return new MessageVM
+                {
+                    Message = "Đã xóa thành công!"
+                };
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.InnerException.Message);
+                return new MessageVM
+                {
+                    Message = e.Message
+                };
+            }
+        }
+
         public List<MessageVM> GetAllChairByHourTimeId(int HourTimeId)
         {
             List<MessageVM> list = new List<MessageVM>();

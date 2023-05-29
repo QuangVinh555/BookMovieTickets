@@ -31,5 +31,18 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete]
+        public IActionResult DeleteChairStatus()
+        {
+            try
+            {
+                return Ok(_chairStatusRepository.DeleteChairStatus());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

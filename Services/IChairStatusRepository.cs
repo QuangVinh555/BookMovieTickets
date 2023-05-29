@@ -9,5 +9,7 @@ namespace BookMovieTickets.Services
     public interface IChairStatusRepository
     {
         List<MessageVM> GetAllChairByHourTimeId(int HourTimeId);
+        MessageVM DeleteChairStatus();
     }
+
 }

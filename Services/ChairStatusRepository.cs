@@ -2,6 +2,7 @@
 using BookMovieTickets.Views;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,15 +21,20 @@ namespace BookMovieTickets.Services
         {
             try
             {
-                var currentDate = DateTime.Now;
-                var _listShowTimes = _context.ShowTimes.Where(x => x.ShowDate < currentDate).ToList();
+                var currentDate = DateTime.Now.Date;
+                var _listShowTimes = _context.ShowTimes.Where(x =>x.Deleted == false).ToList();
                 foreach (var showTime in _listShowTimes)
                 {
-                    var _listHourTimes = _context.HourTimes.Where(x => x.ShowTimeId == showTime.Id).ToList();
-                    foreach (var hourTime in _listHourTimes)
+                    var sqlDateTime = showTime.ShowDate;
+                    if (sqlDateTime < currentDate)
                     {
-                        var _listChairStatus = _context.ChairStatuses.Where(x => x.HourTimeId == hourTime.Id).ToList();
-                        _context.ChairStatuses.RemoveRange(_listChairStatus);
+                        var _listHourTimes = _context.HourTimes.Where(x => x.ShowTimeId == showTime.Id).ToList();
+                        foreach (var hourTime in _listHourTimes)
+                        {
+                            var _listChairStatus = _context.ChairStatuses.Where(x => x.HourTimeId == hourTime.Id).ToList();
+                            _context.ChairStatuses.RemoveRange(_listChairStatus);
+                        }
+
                     }
                 }
                 _context.SaveChanges();
@@ -58,7 +64,10 @@ namespace BookMovieTickets.Services
                     Data = new ChairStatusVM
                     {
                         Id = item.Id,
-                        Chair = _context.Chairs.Where(x => x.Id == item.ChairId).SingleOrDefault().Name
+                        ChairId = item.ChairId,
+                        Chair = _context.Chairs.Where(x => x.Id == item.ChairId).SingleOrDefault().Name,
+                        ChairTypeId = _context.Chairs.Where(x => x.Id == item.ChairId).SingleOrDefault().ChairTypeId,
+                        Status = item.Status
                     }
                 };
                 list.Add(_chair);

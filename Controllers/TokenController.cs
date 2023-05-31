@@ -72,8 +72,10 @@ namespace BookMovieTickets.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
             {
+                    new Claim("Id", user.Id.ToString()),
                     new Claim("Username", user.Fullname),
                     new Claim("Email",user.Email),
+                    new Claim("PhoneNumber",user.PhoneNumber),
                     new Claim("RoleId",user.RoleId.ToString()),
                     new Claim("TokenId",Guid.NewGuid().ToString())
                 }),

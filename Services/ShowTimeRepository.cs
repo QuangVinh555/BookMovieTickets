@@ -157,6 +157,7 @@ namespace BookMovieTickets.Services
                         ShowDate = item.ShowDate,
                         TicketPrice = item.TicketPrice,
                         NumTicket = item.NumTicket,
+                        Stamp = _movie.Stamp,
                         Role = item.Role
                     }
                 };

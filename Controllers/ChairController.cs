@@ -1,6 +1,7 @@
 ﻿using BookMovieTickets.Data;
 using BookMovieTickets.Models;
 using BookMovieTickets.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,6 +34,7 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
 
         [HttpGet]
         public IActionResult GetAll()

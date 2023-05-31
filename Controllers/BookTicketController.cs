@@ -1,5 +1,6 @@
 ﻿using BookMovieTickets.Models;
 using BookMovieTickets.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

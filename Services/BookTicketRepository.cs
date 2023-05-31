@@ -109,6 +109,10 @@ namespace BookMovieTickets.Services
                         return new MessageVM
                         {
                             Message = "Tạo vé có sẵn thành công",
+                            Data = new BookTicketVM
+                            {
+                                Id = item.Id
+                            }
                         };
                     }
                 }
@@ -167,6 +171,10 @@ namespace BookMovieTickets.Services
                 return new MessageVM
                 {
                     Message = "Tạo vé thành công",
+                    Data = new BookTicketVM
+                    {
+                        Id = _bookTicket.Id
+                    }
                 };
             }
             catch (Exception e)

@@ -105,6 +105,7 @@ namespace BookMovieTickets.Services
                     Id = x.Id,
                     ShowTimeId = x.ShowTimeId,
                     CinemaRoomId = x.CinemaRoomId,
+                    CinemaRoom = _context.CinemaRooms.Where(y => y.Id == x.CinemaRoomId).SingleOrDefault().Name,
                     Time = x.Time,
                     EndTime = x.EndTime
                 }
@@ -125,6 +126,7 @@ namespace BookMovieTickets.Services
                         Id = _hourTime.Id,
                         ShowTimeId = _hourTime.ShowTimeId,
                         CinemaRoomId = _hourTime.CinemaRoomId,
+                        CinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault().Name,
                         Time = _hourTime.Time,
                         EndTime = _hourTime.EndTime
                     }

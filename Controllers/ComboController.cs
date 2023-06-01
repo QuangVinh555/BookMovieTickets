@@ -58,6 +58,18 @@ namespace BookMovieTickets.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        [HttpGet("datenow")]
+        public IActionResult GetComboByDateNow()
+        {
+            try
+            {
+                return Ok(_comboRepository.GetComboByDateNow());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         [HttpPut("{id}")]
         public IActionResult UpdateCombo(ComboDTO dto, int id)

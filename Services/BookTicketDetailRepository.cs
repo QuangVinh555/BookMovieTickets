@@ -24,7 +24,6 @@ namespace BookMovieTickets.Services
                 {
                     var _bookTicketDetail = new BookTicketDetail();                
                     var _bookTicket = _context.BookTickets.Where(x => x.Id == dto.BookTicketId).SingleOrDefault();
-                    var _showTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault();
 
                     if (_bookTicket == null)
                     {
@@ -42,32 +41,32 @@ namespace BookMovieTickets.Services
                         };
                     }
 
-                    var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == _chair.Id && x.HourTimeId == _bookTicket.HourTimeId).SingleOrDefault();
-                        if(_chairStatus.Status == 2)
+                    var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == _chair.Id && x.HourTimeId == dto.HourTimeId).SingleOrDefault();
+                    if (_chairStatus.Status == 2)
+                    {
+                        return new MessageVM
                         {
-                            return new MessageVM
-                            {
-                                Message = "Ghế này đã được đặt"
-                            };
-                        }
-                        if (_chairStatus.Status == 1)
+                            Message = "Ghế này đã được đặt"
+                        };
+                    }
+                    if (_chairStatus.Status == 1)
+                    {
+                        return new MessageVM
                         {
-                            return new MessageVM
-                            {
-                                Message = "Ghế này đang được người khác giữ"
-                            };
-                        }
+                            Message = "Ghế này đang được người khác giữ"
+                        };
+                    }
 
                     _bookTicketDetail.BookTicketId = _bookTicket.Id;
                     _bookTicketDetail.ChairId = _chair.Id;
-                    _bookTicketDetail.TicketPrice = _showTime.TicketPrice;
+                    _bookTicketDetail.TicketPrice = dto.TicketPrice;
                     _bookTicket.State = false;
                     _context.SaveChanges();
                     _context.Add(_bookTicketDetail);
 
                     if(_chairStatus != null)
                     {
-                        _chairStatus.Status = 1;
+                        _chairStatus.Status = 2;
                         _context.SaveChanges();
                     }
 
@@ -100,23 +99,17 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public MessageVM DeleteBookTicketDetail(int id)
+        public MessageVM DeleteBookTicketDetail(int chairStatusId, int bookTicketId)
         {
-            var _bookTicketDetail = _context.BookTicketDetails.Where(x => x.Id == id && x.State == false).SingleOrDefault();
-            if(_bookTicketDetail != null)
+            var _chairStatus = _context.ChairStatuses.Where(x => x.Id == chairStatusId).SingleOrDefault();
+            if(_chairStatus != null)
             {
-                var _bookTicket = _context.BookTickets.Where(x => x.Id == _bookTicketDetail.BookTicketId).SingleOrDefault();
-                var _chair = _context.Chairs.Where(x => x.Id == _bookTicketDetail.ChairId).SingleOrDefault();
-                var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == _chair.Id && x.HourTimeId == _bookTicket.HourTimeId).SingleOrDefault();
-                if(_chairStatus != null)
-                {
-                    _chairStatus.Status = 0;
-                    _context.SaveChanges();
-                }
-                _context.Remove(_bookTicketDetail);
+                _chairStatus.Status = 0;
                 _context.SaveChanges();
 
-
+                var _bookTicketDetail = _context.BookTicketDetails.Where(x => x.ChairId == _chairStatus.ChairId && x.State == false && x.BookTicketId == bookTicketId).SingleOrDefault();
+                _context.BookTicketDetails.Remove(_bookTicketDetail);
+                _context.SaveChanges();
                 return new MessageVM
                 {
                     Message = "Đã xóa thành công"
@@ -126,9 +119,30 @@ namespace BookMovieTickets.Services
             {
                 return new MessageVM
                 {
-                    Message = "Không tìm thấy thông tin của vé cần xóa!"
+                    Message = "Không tìm thấy thông tin ghế!"
                 };
             }
+        }
+
+        public MessageVM DeleteBookTicketDetailByState(int bookTicketId, int hourTimeId)
+        {
+            var _listBookTicketDetail = _context.BookTicketDetails.Where(x => x.State == false && x.BookTicketId == bookTicketId).ToList();
+            foreach (var item in _listBookTicketDetail)
+            {
+                var _chairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == hourTimeId).SingleOrDefault();
+                if(_chairStatus != null)
+                {
+                    _chairStatus.Status = 0;
+                    _context.SaveChanges();
+                }
+            }
+            _context.RemoveRange(_listBookTicketDetail);
+            _context.SaveChanges();
+
+            return new MessageVM
+            {
+                Message = "Đã xóa thành công!"
+            };
         }
 
         public List<MessageVM> GetAll()

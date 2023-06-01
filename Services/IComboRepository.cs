@@ -11,6 +11,7 @@ namespace BookMovieTickets.Services
     {
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
+        List<MessageVM> GetComboByDateNow();
         MessageVM CreateCombo(ComboDTO dto);
         MessageVM UpdateCombo(ComboDTO dto, int id);
         MessageVM DeleteCombo(int id);

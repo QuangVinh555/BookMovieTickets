@@ -9,6 +9,7 @@ namespace BookMovieTickets.Models
     {
         public int? BookTicketId { get; set; }
         public int? ChairId { get; set; }
+        public int? HourTimeId { get; set; }
         public double? TicketPrice { get; set; }
         public bool? Deleted { get; set; }
         public bool? State { get; set; }

@@ -84,8 +84,6 @@ namespace BookMovieTickets.Services
                 var _bookTicket = new BookTicket();
 
                 var _user = _context.Users.Where(x => x.Id == dto.UserId).SingleOrDefault();
-                var _showTime = _context.ShowTimes.Where(x => x.Id == dto.ShowTimeId).SingleOrDefault();
-                var _hourTime = _context.HourTimes.Where(x => x.Id == dto.HourTimeId).SingleOrDefault();
 
                 var _listBookTickets = _context.BookTickets.ToList();
                 foreach (var item in _listBookTickets)
@@ -94,8 +92,8 @@ namespace BookMovieTickets.Services
                     {
                         _bookTicket.UserId = _user.Id;
                         _bookTicket.MovieId = null;
-                        _bookTicket.ShowTimeId = _showTime.Id;
-                        _bookTicket.HourTimeId = _hourTime.Id;
+                        _bookTicket.ShowTimeId = null;
+                        _bookTicket.HourTimeId = null;
                         _bookTicket.ComboId = null;
                         _bookTicket.PaymentId = null;
                         _bookTicket.RewardPoints = null;
@@ -125,38 +123,11 @@ namespace BookMovieTickets.Services
                         Message = "Không tìm được thông tin người dùng này!"
                     };
                 }
-                if (_showTime == null)
-                {
-                    return new MessageVM
-                    {
-                        Message = "Không tìm được thông tin suất chiếu này!"
-                    };
-                }
-                else
-                {
-                    if (_hourTime == null)
-                    {
-                        return new MessageVM
-                        {
-                            Message = "Không tìm được thông tin giờ chiếu này!"
-                        };
-                    }
-                    else
-                    {
-                        if (_hourTime.ShowTimeId != _showTime.Id)
-                        {
-                            return new MessageVM
-                            {
-                                Message = "Không tìm được thông tin giờ chiếu này trong suất chiếu này!"
-                            };
-                        }
-                    }
-                }
 
                 _bookTicket.UserId = _user.Id;
                 _bookTicket.MovieId = null;
-                _bookTicket.ShowTimeId = _showTime.Id;
-                _bookTicket.HourTimeId = _hourTime.Id;
+                _bookTicket.ShowTimeId = null;
+                _bookTicket.HourTimeId = null;
                 _bookTicket.ComboId = null;
                 _bookTicket.PaymentId = null;
                 _bookTicket.RewardPoints = null;
@@ -241,7 +212,7 @@ namespace BookMovieTickets.Services
                             {
                                 if (item.ChairId != null)
                                 {
-                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == _bookTicket.HourTimeId).ToList();
+                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
                                         if (_chair.Status == 2)
@@ -282,7 +253,7 @@ namespace BookMovieTickets.Services
                             {
                                 if (item.ChairId != null)
                                 {
-                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == _bookTicket.HourTimeId).ToList();
+                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
                                         if (_chair.Status == 2)
@@ -324,7 +295,7 @@ namespace BookMovieTickets.Services
                             {
                                 if (item.ChairId != null)
                                 {
-                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == _bookTicket.HourTimeId).ToList();
+                                    var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
                                         if (_chair.Status == 2)
@@ -398,7 +369,8 @@ namespace BookMovieTickets.Services
                             }
                         }
 
-                        var _showTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault();
+                        var _showTime = _context.ShowTimes.Where(x => x.Id == dto.ShowTimeId).SingleOrDefault();
+                        var _hourTime = _context.HourTimes.Where(x => x.Id == dto.HourTimeId).SingleOrDefault();
                         var _payment = _context.Payments.Where(x => x.Id == dto.PaymentId).SingleOrDefault();
                         if (_payment == null)
                         {
@@ -410,6 +382,8 @@ namespace BookMovieTickets.Services
 
                         _bookTicket.UserId = _user.Id;
                         _bookTicket.MovieId = _showTime.MovieId;
+                        _bookTicket.ShowTimeId = _showTime.Id;
+                        _bookTicket.HourTimeId = _hourTime.Id;
                         _bookTicket.ComboId = dto.ComboId == null ? null : dto.ComboId;
                         _bookTicket.PaymentId = _payment.Id;
                         _bookTicket.RewardPoints = (int)total_accumulated_points;

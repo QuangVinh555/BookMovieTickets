@@ -84,17 +84,31 @@ namespace BookMovieTickets.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteCombo(int id)
+        [HttpDelete]
+        public IActionResult DeleteBookTicketDetail(int chairStatusId, int bookTicketId)
         {
             try
             {
-                return Ok(_bookTicketDetailRepository.DeleteBookTicketDetail(id));
+                return Ok(_bookTicketDetailRepository.DeleteBookTicketDetail(chairStatusId, bookTicketId));
             }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete("bookticket")]
+        public IActionResult DeleteBookTicketDetailByState(int bookTicketId, int hourTimeId)
+        {
+            try
+            {
+                return Ok(_bookTicketDetailRepository.DeleteBookTicketDetailByState(bookTicketId, hourTimeId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }

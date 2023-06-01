@@ -14,6 +14,7 @@ namespace BookMovieTickets.Services
         List<MessageVM> GetByTicketId(int bookTicketId);
         MessageVM CreateBookTicketDetail(BookTicketDetailDTO dto);
         MessageVM UpdateBookTicketDetail(BookTicketDetailDTO dto, int id);
-        MessageVM DeleteBookTicketDetail(int id);
+        MessageVM DeleteBookTicketDetail(int chairStatusId, int bookTicketId);
+        MessageVM DeleteBookTicketDetailByState(int bookTicketId, int hourTimeId);
     }
 }

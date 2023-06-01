@@ -131,22 +131,40 @@ namespace BookMovieTickets.Services
             }
         }
 
+        public List<MessageVM> GetComboByDateNow()
+        {
+            List<MessageVM> _list = new List<MessageVM>();
+
+            var currentDate = DateTime.Now.Date;
+
+            var _combos = _context.Combos.Where(x => x.StartTime <= currentDate && currentDate <= x.EndTime).ToList();
+            foreach (var item in _combos)
+            {
+                var combo = new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new ComboVM
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Description = item.Description,
+                        Count = item.Count,
+                        Price = item.Price,
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime
+                    }
+                };
+                _list.Add(combo);
+            }
+            return _list;
+        }
+
         public MessageVM UpdateCombo(ComboDTO dto, int id)
         {
             var _combo = _context.Combos.Where(x => x.Id == id).SingleOrDefault();
             if(_combo != null)
             {
-                var _listCombos = _context.Combos.ToList();
-                foreach (var combo in _listCombos)
-                {
-                    if (string.Compare(combo.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
-                    {
-                        return new MessageVM
-                        {
-                            Message = "Tên combo đã được tạo, bạn không được cập nhật"
-                        };
-                    }
-                }
+             
                 _combo.Name = dto.Name;
                 _combo.Description = dto.Description;
                 _combo.Count = dto.Count;

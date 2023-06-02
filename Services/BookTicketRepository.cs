@@ -215,13 +215,7 @@ namespace BookMovieTickets.Services
                                     var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
-                                        if (_chair.Status == 2)
-                                        {
-                                            return new MessageVM
-                                            {
-                                                Message = "Ghế bạn chọn đã có người khác đặt!"
-                                            };
-                                        }                                     
+                                                       
                                         _chair.Status = 2;
                                         //_context.SaveChanges();
                                     }
@@ -256,13 +250,6 @@ namespace BookMovieTickets.Services
                                     var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
-                                        if (_chair.Status == 2)
-                                        {
-                                            return new MessageVM
-                                            {
-                                                Message = "Ghế bạn chọn đã có người khác đặt!"
-                                            };
-                                        }
                                      
                                         _chair.Status = 2;
                                         //_context.SaveChanges();
@@ -298,14 +285,7 @@ namespace BookMovieTickets.Services
                                     var _listChairStatus = _context.ChairStatuses.Where(x => x.ChairId == item.ChairId && x.HourTimeId == dto.HourTimeId).ToList();
                                     foreach (var _chair in _listChairStatus)
                                     {
-                                        if (_chair.Status == 2)
-                                        {
-                                            return new MessageVM
-                                            {
-                                                Message = "Ghế bạn chọn đã có người khác đặt!"
-                                            };
-                                        }
-                                      
+                        
                                         _chair.Status = 2;
                                         //_context.SaveChanges();
                                     }
@@ -419,6 +399,7 @@ namespace BookMovieTickets.Services
                                 HourTime = _context.HourTimes.Where(y => y.Id == _bookTicket.HourTimeId).FirstOrDefault().Time,
                                 Payment = _context.Payments.Where(y => y.Id == dto.PaymentId).SingleOrDefault().PaymentType,
                                 CinemaName = _nameCinema.Name,
+                                CinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault().Name,
                                 Location = _nameCinema.LocationDetail,
                                 TotalTicket = _bookTicket.TotalTickets,
                                 NameCombo = dto.ComboId == null ? "" : _context.Combos.Where(x => x.Id == dto.ComboId).SingleOrDefault().Name,

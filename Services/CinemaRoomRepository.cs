@@ -85,17 +85,17 @@ namespace BookMovieTickets.Services
                         else if (i > 64 && i <= 128)
                         {
                             _chairType = 2;
-                            if (i <= 64)
+                            if (i > 64 && i <= 80)
                             {
                                 _nameChair = "E" + e;
                                 e++;
                             }
-                            else if (i > 64 && i <= 80)
+                            else if (i > 80 && i <= 96)
                             {
                                 _nameChair = "F" + f;
                                 f++;
                             }
-                            else if (i > 80 && i <= 96)
+                            else if (i > 96 && i <= 112)
                             {
                                 _nameChair = "G" + g;
                                 g++;
@@ -287,27 +287,22 @@ namespace BookMovieTickets.Services
             var _listCinemaRooms = _context.CinemaRooms.ToList();
             if (_cinemaRoom != null)
             {
-                //foreach (var cinemaRoom in _listCinemaRooms)
-                //{
-                //    if (cinemaRoom.CinemaNameId == _cinemaName.Id)
-                //    {
-                //        if (string.Compare(cinemaRoom.Name, dto.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
-                //        {
-                //            return new MessageVM
-                //            {
-                //                Message = "Tên đã tồn tại"
-                //            };
-                //        }
-                //    }
-                //}
-            
-               
-
                 if(dto.NumChair > _cinemaRoom.NumChair || dto.NumChair < _cinemaRoom.NumChair || _cinemaRoom.NumChair == null)
                 {
+                    try
+                    {
+
                     var _listChairs = _context.Chairs.Where(x => x.CinemaRoomId == _cinemaRoom.Id).ToList();
-                    _context.Chairs.RemoveRange(_listChairs);
-                    _context.SaveChanges();
+                        foreach (var item in _listChairs)
+                        {
+                            item.Deleted = true;
+                        }
+                        _context.SaveChanges();
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e.InnerException.Message);
+                    }
 
                     try
                     {
@@ -343,17 +338,17 @@ namespace BookMovieTickets.Services
                             else if (i > 64 && i <= 128)
                             {
                                 _chairType = 2;
-                                if (i <= 64)
+                                if (i > 64 && i <= 80)
                                 {
                                     _nameChair = "E" + e;
                                     e++;
                                 }
-                                else if (i > 64 && i <= 80)
+                                else if (i > 80 && i <= 96)
                                 {
                                     _nameChair = "F" + f;
                                     f++;
                                 }
-                                else if (i > 80 && i <= 96)
+                                else if (i > 96 && i <= 112)
                                 {
                                     _nameChair = "G" + g;
                                     g++;

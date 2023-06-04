@@ -18,63 +18,45 @@ namespace BookMovieTickets.Services
         }
         public List<MessageVM> GetAll()
         {
-
-            var _listBookTickets = _context.BookTickets.ToList();
-            List<MessageVM> list = new List<MessageVM>();
-            Combo _combo = null;
-            ShowTime _showTime = null;
-            HourTime _hourTime = null;
-            CinemaRoom _roomCinema = null;
-            CinemaName _nameCinema = null;
-            foreach (var item in _listBookTickets)
-            {
-                try
-                {
-                    _showTime = _context.ShowTimes.Where(x => x.Id == item.ShowTimeId).SingleOrDefault();
-                    _hourTime = _context.HourTimes.Where(x => x.Id == item.HourTimeId).SingleOrDefault();
-                    _nameCinema = _context.CinemaNames.Where(x => x.Id == _roomCinema.CinemaNameId).SingleOrDefault();
-                    _combo = _context.Combos.Where(x => x.Id == item.ComboId).SingleOrDefault();
-                    var _bookTicket = new MessageVM
-                    {
-                        Message = "Lấy dữ liệu thành công",
-                        Data = new BookTicketVM
-                        {
-                            Id = item.Id,
-                            UserName = item.UserId == null ? "" : _context.Users.Where(y => y.Id == item.UserId).FirstOrDefault().Fullname,
-                            Movie = item.MovieId == null ? "" : _context.Movies.Where(y => y.Id == item.MovieId).SingleOrDefault().Name,
-                            Stamp = item.MovieId == null ? "" : _context.Movies.Where(y => y.Id == item.MovieId).SingleOrDefault().Stamp,
-                            RoleMovie = _showTime == null ? "" : _showTime.Role,
-                            ShowTime = _showTime == null ? DateTime.Now : _showTime.ShowDate,
-                            HourTime = _hourTime == null ? "" : _hourTime.Time,
-                            Payment = item.PaymentId == null ? "" : _context.Payments.Where(y => y.Id == item.PaymentId).SingleOrDefault().PaymentType,
-                            CinemaName = _nameCinema == null ? "" : _nameCinema.Name,
-                            Location = _nameCinema == null ? "" : _nameCinema.LocationDetail,
-                            CinemaRoom = _roomCinema == null ? "" : _roomCinema.Name,
-                            TotalTicket = item.TotalTickets == null ? 0 : item.TotalTickets,
-                            NameCombo = _combo == null ? "" : _combo.Name,
-                            CountCombo = item.CountCombo == null ? 0 : item.CountCombo,
-                            TotalCombo = item.TotalCombo == null ? 0 : item.TotalCombo,
-                            Total = item.TotalPrice == null ? 0 : item.TotalPrice,
-                            RewardPoints = item.RewardPoints == null ? 0 : item.RewardPoints,
-                            RewardPoints_Used = item.MoneyPoints == null ? 0 : item.MoneyPoints,
-                            CreatedAt = item.CreatedAt == null ? DateTime.Now : item.CreatedAt
-                        }
-                    };
-                    list.Add(_bookTicket);
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.InnerException.Message);
-                    return null;
-                }
-            }
-            return list;
+            return null;
         }
 
         public MessageVM GetById(int id)
         {
-            throw new NotImplementedException();
+            var _bookTicket = _context.BookTickets.Where(x => x.Id == id).SingleOrDefault();
+            if(_bookTicket != null)
+            {
+                var _movie = _context.Movies.Where(x => x.Id == _bookTicket.MovieId).SingleOrDefault();
+                var _hourTime = _context.HourTimes.Where(x => x.Id == _bookTicket.HourTimeId).SingleOrDefault();
+                var _showTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault();
+                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
+                return new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new BookTicketVM
+                    {
+                        Id = _bookTicket.Id,
+                        Movie = _movie.Name,
+                        Stamp = _movie.Stamp,
+                        HourTimeStart = _hourTime.Time,
+                        HourTimeEnd = _hourTime.EndTime,
+                        CinemaName = _cinemaName.Name,
+                        Location = _cinemaName.LocationDetail,
+                        CinemaRoom = _cinemaRoom.Name,
+                        RewardPoints_Used = _bookTicket.MoneyPoints,
+                        Total = _bookTicket.TotalPrice,
+
+                    }
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy dữ liệu cần lấy"
+                };
+            }
         }
 
         public MessageVM CreateBookTicket(BookTicketDTO dto)
@@ -396,7 +378,7 @@ namespace BookMovieTickets.Services
                                 Stamp = _context.Movies.Where(y => y.Id == _showTime.MovieId).SingleOrDefault().Stamp,
                                 RoleMovie = _context.ShowTimes.Where(y => y.Id == _bookTicket.ShowTimeId).SingleOrDefault().Role,
                                 ShowTime = _context.ShowTimes.Where(y => y.Id == _bookTicket.ShowTimeId).SingleOrDefault().ShowDate,
-                                HourTime = _context.HourTimes.Where(y => y.Id == _bookTicket.HourTimeId).FirstOrDefault().Time,
+                                HourTimeStart = _context.HourTimes.Where(y => y.Id == _bookTicket.HourTimeId).FirstOrDefault().Time,
                                 Payment = _context.Payments.Where(y => y.Id == dto.PaymentId).SingleOrDefault().PaymentType,
                                 CinemaName = _nameCinema.Name,
                                 CinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault().Name,

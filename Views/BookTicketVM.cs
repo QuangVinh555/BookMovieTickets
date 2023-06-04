@@ -12,7 +12,8 @@ namespace BookMovieTickets.Views
         public string Movie { get; set; }
         public string Stamp { get; set; }
         public DateTime? ShowTime { get; set; }
-        public string HourTime { get; set; }
+        public string HourTimeStart { get; set; }
+        public string HourTimeEnd { get; set; }
         public string Payment { get; set; }
         public string CinemaName { get; set; }
         public string Location { get; set; }

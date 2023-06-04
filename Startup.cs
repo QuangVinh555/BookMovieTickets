@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Apis.Gmail.v1;
+using BookMovieTickets.Controllers;
 
 namespace BookMovieTickets
 {
@@ -59,6 +61,7 @@ namespace BookMovieTickets
             services.AddScoped<IBookTicketDetailRepository, BookTicketDetailRepository>();
             services.AddScoped<IChairStatusRepository, ChairStatusRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IUserPointRepository, UserPointRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -95,6 +98,7 @@ namespace BookMovieTickets
                     option.ClientSecret = gConfig["ClientSecret"];
                     //option.CallbackPath = "/api/tokengoogle";
                 });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

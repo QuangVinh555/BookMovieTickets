@@ -285,5 +285,38 @@ namespace BookMovieTickets.Services
             }
             return list;
         }
+
+        public MessageVM GetIdUserByLoginGG(string email)
+        {
+            var _user = _context.Users.Where(x => x.Email.Equals(email)).SingleOrDefault();
+            if(_user != null)
+            {
+                return new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new UserVM
+                    {
+                        Id = _user.Id,
+                        RoleId = _user.RoleId,
+                        LoginTypeId = _user.LoginTypeId,
+                        UserRankId = _user.UserRankId,
+                        Avatar = _user.Avatar,
+                        Fullname = _user.Fullname,
+                        Email = _user.Email,
+                        Date = _user.Date,
+                        PhoneNumber = _user.PhoneNumber,
+                        Address = _user.Address,
+                        Password = _user.Password,
+                    }
+                };
+            }
+            else
+            {
+                return new MessageVM
+                {
+                    Message = "Không tìm thấy thông tin dữ liệu này!"
+                };
+            }
+        }
     }
 }

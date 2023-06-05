@@ -72,6 +72,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/user/email")]
+        public IActionResult GetUserIdByLoginGG(string email)
+        {
+            try
+            {
+                return Ok(_userRepository.GetIdUserByLoginGG(email));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateUser(UserDTO dto , int id)
         {

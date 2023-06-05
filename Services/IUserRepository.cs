@@ -12,6 +12,7 @@ namespace BookMovieTickets.Services
         List<MessageVM> GetAllByPage(int page);
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
+        MessageVM GetIdUserByLoginGG(string email);
         MessageVM CreateUser(UserDTO dto);
         MessageVM UpdateUser(UserDTO dto, int id);
         MessageVM DeleteUser(int id);

@@ -366,23 +366,119 @@ namespace BookMovieTickets.Services
                             _context.SaveChanges();
                         }
 
-                        var _nameCinema = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                        var FullName = _context.Users.Where(y => y.Id == _bookTicket.UserId).FirstOrDefault().Fullname;
+                        var CinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                        var HourTime = _context.HourTimes.Where(y => y.Id == _bookTicket.HourTimeId).SingleOrDefault();
+                        var ShowTime = _context.ShowTimes.Where(y => y.Id == _bookTicket.ShowTimeId).SingleOrDefault();
+                        var CinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
+                        var _listTicketDetails = _context.BookTicketDetails.Where(x => x.BookTicketId == _bookTicket.Id).ToList();
+                        var NameCombo = dto.ComboId == null ? "" : _context.Combos.Where(x => x.Id == dto.ComboId).SingleOrDefault().Name;
+                        var Movie = _context.Movies.Where(y => y.Id == _showTime.MovieId).SingleOrDefault();
+
+                        int dem = 0;
+                        foreach (var item in _listTicketDetails)
+                        {
+                            dem++;
+                        }
+                        // Gửi mail
+                        MailSender mailSender = new MailSender();
+                        //string htmlBody = "<html><body>"
+                        // + "<h1 style=\"color: blue;\"> Đặt vé thành công </h1>"
+                        // + "<p style=\"font-weight: 700;\">Xin chào " + FullName + "</p>"
+                        // + "<p>Cảm ơn bạn đã sử dụng dịch vụ của MoVeek!</p>"
+                        // + "<p>MoVeek xác nhận bạn đã đặt vé xem phim của " + CinemaName.Name + " thành công lúc " + _bookTicket.UpdatedAt + ".</p>"
+                        // + "<p>Chi tiết vé của bạn như sau:</p>"
+                        // + "<div style=\"padding-bottom: 50px;\"></div>"
+                        // + "<p>Mã đặt vé: " + _bookTicket.Id + "</p>"
+                        // + "<p style=\"color: #727272;\">Thời gian chiếu:</p>"
+                        // + "<p>" + HourTime.Time + " " + ShowTime.ShowDate + "</p>"
+                        // + "<h2>Phim: " + Movie.Name + "</h2>"
+                        // + "<div>"
+                        // + "<p style=\"color: #727272;\">Phòng chiếu: </p>"
+                        // + "<p>" + CinemaRoom.Name + "</p>"
+                        // + "<p style=\"color: #727272; margin-left: 15px;\">Số vé: </p>"
+                        // + "<p>" + dem + "</p>"
+                        // + "<p style=\"color: #727272; margin-left: 15px;\">Số ghế: </p>";
+
+                        //foreach (var item in _listTicketDetails)
+                        //{
+                        //            var Chair = _context.Chairs.Where(x => x.Id == item.ChairId).SingleOrDefault().Name;
+                        //            htmlBody += "<p>" + Chair + " , " + "</p>";
+                        //}
+
+                        //htmlBody += "</div>"
+
+                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
+                        //+ "<p style=\"color: #727272;\" >Combo Bắp-Nước</p>"
+                        //+ (NameCombo != "" ? "<p> " + NameCombo + "</p>" : "<p>Không</p>")
+                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
+                        //+ "<p style=\"color: #727272;\" >Rạp chiếu</p>"
+                        //+ "<p style=\"font-weight: 700;\">" + CinemaName.Name + "</p>"
+                        //+ "<p>" + CinemaName.LocationDetail + "</p>"
+                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
+                        //+ "<div style=\"display: flex; align-items: center; background-color: #f0f0f0;\">"
+                        //+ "<p style=\"color: #727272; padding: 22px\">Tổng tiền </p>"
+                        //+ "<p >" + _bookTicket.TotalPrice + "</p>"
+                        //+ "</div>"
+                        //+ "</body></html>";
+                        string htmlBody = "<html><body>"
+                     + "<h1 style=\"color: blue;\"> Đặt vé thành công </h1>"
+                     + "<p style=\"font-weight: 700;\">Xin chào " + FullName + "</p>"
+                     + "<p>Cảm ơn bạn đã sử dụng dịch vụ của MoVeek!</p>"
+                     + "<p>MoVeek xác nhận bạn đã đặt vé xem phim của " + CinemaName.Name + " thành công lúc " + _bookTicket.UpdatedAt + ".</p>"
+                     + "<p>Chi tiết vé của bạn như sau:</p>"
+                     + "<div style=\"padding-bottom: 50px;\"></div>"
+                     + "<p>Mã đặt vé: " + _bookTicket.Id + "</p>"
+                     + "<p style=\"color: #727272;\">Thời gian chiếu:</p>"
+                     + "<p>" + HourTime.Time + " " + ShowTime.ShowDate + "</p>"
+                     + "<h2>Phim: " + Movie.Name + "</h2>"
+                     + "<div>"
+                     + "<p style=\"color: #727272;\">Phòng chiếu: </p>"
+                     + "<p>" + CinemaRoom.Name + "</p>"
+                     + "<p style=\"color: #727272;\">Số vé: </p>"
+                     + "<p>" + dem + "</p>"
+                     + "<p style=\"color: #727272;\">Số ghế: </p>";
+
+                        foreach (var item in _listTicketDetails)
+                        {
+                            var Chair = _context.Chairs.SingleOrDefault(x => x.Id == item.ChairId)?.Name;
+                            htmlBody += "<p>" + Chair + "</p>";
+                        }
+
+                        htmlBody += "</div>"
+                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                    + "<p style=\"color: #727272;\">Combo Bắp-Nước</p>"
+                                    + (NameCombo != "" ? "<p> " + NameCombo + "</p>" : "<p>Không</p>")
+                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                    + "<p style=\"color: #727272;\">Rạp chiếu</p>"
+                                    + "<p style=\"font-weight: 700;\">" + CinemaName.Name + "</p>"
+                                    + "<p>" + CinemaName.LocationDetail + "</p>"
+                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                    + "<div style=\"display: flex; padding: 22px; align-items: center; background-color: #f0f0f0;\">"
+                                    + "<p style=\"color: #727272;\">Tổng tiền </p>"
+                                    + "<p style=\"margin-left: 20px;\">" + _bookTicket.TotalPrice + "</p>"
+                                    + "</div>"
+                                    + "</body></html>";
+
+                        mailSender.MailSenders(_user.Email, htmlBody, "Vé xem phim");
+
+                        //var _nameCinema = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
                         return new MessageVM
                         {
                             Message = "Đặt vé thành công",
                             Data = new BookTicketVM
                             {
                                 Id = _bookTicket.Id,
-                                UserName = _context.Users.Where(y => y.Id == _bookTicket.UserId).FirstOrDefault().Fullname,
-                                Movie = _context.Movies.Where(y => y.Id == _showTime.MovieId).SingleOrDefault().Name,
-                                Stamp = _context.Movies.Where(y => y.Id == _showTime.MovieId).SingleOrDefault().Stamp,
-                                RoleMovie = _context.ShowTimes.Where(y => y.Id == _bookTicket.ShowTimeId).SingleOrDefault().Role,
-                                ShowTime = _context.ShowTimes.Where(y => y.Id == _bookTicket.ShowTimeId).SingleOrDefault().ShowDate,
-                                HourTimeStart = _context.HourTimes.Where(y => y.Id == _bookTicket.HourTimeId).FirstOrDefault().Time,
+                                UserName = FullName,
+                                Movie = Movie.Name,
+                                Stamp = Movie.Stamp,
+                                RoleMovie = ShowTime.Role,
+                                ShowTime = ShowTime.ShowDate,
+                                HourTimeStart = HourTime.Time,
                                 Payment = _context.Payments.Where(y => y.Id == dto.PaymentId).SingleOrDefault().PaymentType,
-                                CinemaName = _nameCinema.Name,
-                                CinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault().Name,
-                                Location = _nameCinema.LocationDetail,
+                                CinemaName = CinemaName.Name,
+                                CinemaRoom = CinemaRoom.Name,
+                                Location = CinemaName.LocationDetail,
                                 TotalTicket = _bookTicket.TotalTickets,
                                 NameCombo = dto.ComboId == null ? "" : _context.Combos.Where(x => x.Id == dto.ComboId).SingleOrDefault().Name,
                                 CountCombo = dto.CountCombo == null ? 0 : dto.CountCombo,

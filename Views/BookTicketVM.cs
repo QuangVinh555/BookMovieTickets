@@ -24,6 +24,7 @@ namespace BookMovieTickets.Views
         public double? CountCombo { get; set; }
         public double? TotalCombo { get; set; }
         public double? Total { get; set; }
+        public double? TotalAll { get; set; }
         public double? RewardPoints_Used { get; set; }
         public int? RewardPoints { get; set; }
         public bool? State { get; set; }

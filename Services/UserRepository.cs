@@ -198,21 +198,77 @@ namespace BookMovieTickets.Services
         public MessageVM UpdateUser(UserDTO dto, int id)
         {
 
+            //try
+            //{
+            //    byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
+            //    string passwordEncoding = Convert.ToBase64String(bytes);
+
+            //    var _user = _context.Users.Where(x => x.Id == id).SingleOrDefault();
+            //    if (_user != null)
+            //    {
+            //        _user.Avatar = dto.Avatar;
+            //        _user.Fullname = dto.Fullname;
+            //        _user.Email = dto.Email;
+            //        _user.Date = dto.Date;
+            //        _user.PhoneNumber = dto.PhoneNumber;
+            //        _user.Address = dto.Address;
+            //        _user.Password = passwordEncoding;
+            //        _context.SaveChanges();
+            //        return new MessageVM
+            //        {
+            //            Message = "Cập nhật thông tin thành công",
+            //            Data = new UserVM
+            //            {
+            //                Id = _user.Id,
+            //                RoleId = _user.RoleId,
+            //                LoginTypeId = _user.LoginTypeId,
+            //                UserRankId = _user.UserRankId,
+            //                Avatar = _user.Avatar,
+            //                Fullname = _user.Fullname,
+            //                Email = _user.Email,
+            //                Date = _user.Date,
+            //                PhoneNumber = _user.PhoneNumber,
+            //                Address = _user.Address,
+            //                Password = _user.Password,
+            //            }
+            //        };
+            //    }
+            //    else
+            //    {
+            //        return new MessageVM
+            //        {
+            //            Message = "Không tìm thấy thông tin của Id này"
+            //        };
+            //    }
+            //}
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine(e.InnerException.Message);
+            //    return new MessageVM
+            //    {
+            //        Message = e.Message
+            //    };
+            //}
             try
             {
-                byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
-                string passwordEncoding = Convert.ToBase64String(bytes);
-
                 var _user = _context.Users.Where(x => x.Id == id).SingleOrDefault();
                 if (_user != null)
                 {
-                    _user.Avatar = dto.Avatar;
-                    _user.Fullname = dto.Fullname;
-                    _user.Email = dto.Email;
-                    _user.Date = dto.Date;
-                    _user.PhoneNumber = dto.PhoneNumber;
-                    _user.Address = dto.Address;
-                    _user.Password = passwordEncoding;
+                    _user.Avatar = dto.Avatar ?? _user.Avatar;
+                    _user.Fullname = dto.Fullname ?? _user.Fullname;
+                    _user.Email = dto.Email ?? _user.Email;
+                    _user.Date = dto.Date ?? _user.Date;
+                    _user.PhoneNumber = dto.PhoneNumber ?? _user.PhoneNumber;
+                    _user.Address = dto.Address ?? _user.Address;
+                    _user.UserRankId = dto.UserRankId ?? _user.UserRankId;
+
+                    if (!string.IsNullOrEmpty(dto.Password))
+                    {
+                        byte[] bytes = Encoding.UTF8.GetBytes(dto.Password);
+                        string passwordEncoding = Convert.ToBase64String(bytes);
+                        _user.Password = passwordEncoding;
+                    }
+
                     _context.SaveChanges();
                     return new MessageVM
                     {
@@ -241,7 +297,7 @@ namespace BookMovieTickets.Services
                     };
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.InnerException.Message);
                 return new MessageVM
@@ -249,6 +305,7 @@ namespace BookMovieTickets.Services
                     Message = e.Message
                 };
             }
+
         }
 
         public List<MessageVM> GetAll()
@@ -300,6 +357,7 @@ namespace BookMovieTickets.Services
                         RoleId = _user.RoleId,
                         LoginTypeId = _user.LoginTypeId,
                         UserRankId = _user.UserRankId,
+                        UserRank = _context.UserRanks.Where(x => x.Id == _user.UserRankId).SingleOrDefault().Name,
                         Avatar = _user.Avatar,
                         Fullname = _user.Fullname,
                         Email = _user.Email,

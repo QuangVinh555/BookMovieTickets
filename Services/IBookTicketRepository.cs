@@ -14,5 +14,7 @@ namespace BookMovieTickets.Services
         MessageVM CreateBookTicket(BookTicketDTO dto);
         MessageVM UpdateBookTicket(BookTicketDTO dto, int id);
         MessageVM DeleteBookTicket(int id);
+        List<MessageVM> GetBookTicketByUserId(int page, int userId);
+
     }
 }

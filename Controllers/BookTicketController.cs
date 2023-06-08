@@ -60,6 +60,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/bookticket/page")]
+        public IActionResult GetBookTicketByUserId(int page, int userId)
+        {
+            try
+            {
+                return Ok(_bookTicketRepository.GetBookTicketByUserId(page, userId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateBookTicket(BookTicketDTO dto, int id)
         {

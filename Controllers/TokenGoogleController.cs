@@ -53,7 +53,8 @@ namespace BookMovieTickets.Controllers
                 var Email = payload.Email;
                 var Name = payload.Name;
                 
-                var _user = _context.Users.Where(x => x.Email.Equals(Email)).SingleOrDefault();
+                var _user = _context.Users.Where(x => x.Email.Equals(Email)).FirstOrDefault();
+
                 if(_user != null)
                 {
                     _context.SaveChanges();
@@ -63,6 +64,7 @@ namespace BookMovieTickets.Controllers
                     var user = new User();
                     user.Email = Email;
                     user.Fullname = Name;
+                    user.LoginTypeId = 2;
                     _context.Users.Add(user);
                     _context.SaveChanges();
                     var _userPoint = new UserPoint();

@@ -11,5 +11,6 @@ namespace BookMovieTickets.Models
         public int? ChairTypeId { get; set; }
         public string Name { get; set; }
         public int? Status { get; set; }
+        public int? Flag { get; set; }
     }
 }

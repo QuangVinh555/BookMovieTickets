@@ -41,9 +41,13 @@ namespace BookMovieTickets.Services
             _chair.Status = dto.Status;
             _context.Add(_chair);
             _context.SaveChanges();
-            var _cinemaRoomNew = _context.CinemaRooms.Where(x => x.Id == _chair.CinemaRoomId).SingleOrDefault();
-            _cinemaRoomNew.NumChair++;
-            _context.SaveChanges();
+
+            if(dto.Flag != 0)
+            {
+                var _cinemaRoomNew = _context.CinemaRooms.Where(x => x.Id == _chair.CinemaRoomId).SingleOrDefault();
+                _cinemaRoomNew.NumChair++;
+                _context.SaveChanges();
+            }
             return new MessageVM
             {
                 Message = "Thêm ghế thành công",

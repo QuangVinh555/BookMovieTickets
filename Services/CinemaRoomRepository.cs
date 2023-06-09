@@ -116,7 +116,8 @@ namespace BookMovieTickets.Services
                         {
                             CinemaRoomId = _cinemaRoom.Id,
                             ChairTypeId = _chairType,
-                            Name = _nameChair
+                            Name = _nameChair,
+                            Flag = 0
                         };
                         ChairRepository _chairRepository = new ChairRepository(_context);
                         _chairRepository.CreateChair(_chairDTO);

@@ -329,5 +329,117 @@ namespace BookMovieTickets.Services
                 };
             }
         }
+
+        public List<MessageVM> GetByMovieId(int? locationId, int? cinemaTypeId, int movieId)
+        {
+            List<MessageVM> list = new List<MessageVM>();
+            if(locationId != 0 && cinemaTypeId != 0)
+            {
+                var _cinemaNames = _context.CinemaNames.Where(x => x.LocationId == locationId && x.CinemaTypeId == cinemaTypeId).ToList();
+                foreach (var item in _cinemaNames)
+                {
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    if(_showTime != null)
+                    {
+                        var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                        var _cinemaName = new MessageVM
+                        {
+                            Message = "Lấy dữ liệu thành công!",
+                            Data = new CinemaNameVM
+                            {
+                                Id = cinemaName.Id,
+                                LocationId = cinemaName.LocationId,
+                                Location = _context.Locations.Where(x => x.Id == cinemaName.LocationId).SingleOrDefault().Province,
+                                CinemaTypeId = cinemaName.Id,
+                                CinemaType = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Name,
+                                Logo = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Logo,
+                                LocationDetail = cinemaName.LocationDetail,
+                                Name = cinemaName.Name
+                            }
+                        };
+                        list.Add(_cinemaName);
+                    }
+                    
+                }
+                return list;
+            } else if(locationId != 0)
+            {
+                var _cinemaNames = _context.CinemaNames.Where(x => x.LocationId == locationId).ToList();
+                foreach (var item in _cinemaNames)
+                {
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    if (_showTime != null)
+                    {
+                        var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                        var _cinemaName = new MessageVM
+                        {
+                            Message = "Lấy dữ liệu thành công!",
+                            Data = new CinemaNameVM
+                            {
+                                Id = cinemaName.Id,
+                                LocationId = cinemaName.LocationId,
+                                Location = _context.Locations.Where(x => x.Id == cinemaName.LocationId).SingleOrDefault().Province,
+                                CinemaTypeId = cinemaName.Id,
+                                CinemaType = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Name,
+                                Logo = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Logo,
+                                LocationDetail = cinemaName.LocationDetail,
+                                Name = cinemaName.Name
+                            }
+                        };
+                        list.Add(_cinemaName);
+                    }
+
+                }
+                return list;
+            }
+            else if(cinemaTypeId != 0)
+            {
+                var _cinemaNames = _context.CinemaNames.Where(x => x.CinemaTypeId == cinemaTypeId).ToList();
+                foreach (var item in _cinemaNames)
+                {
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    if (_showTime != null)
+                    {
+                        var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                        var _cinemaName = new MessageVM
+                        {
+                            Message = "Lấy dữ liệu thành công!",
+                            Data = new CinemaNameVM
+                            {
+                                Id = cinemaName.Id,
+                                LocationId = cinemaName.LocationId,
+                                Location = _context.Locations.Where(x => x.Id == cinemaName.LocationId).SingleOrDefault().Province,
+                                CinemaTypeId = cinemaName.Id,
+                                CinemaType = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Name,
+                                Logo = _context.CinemaTypes.Where(x => x.Id == cinemaName.CinemaTypeId).SingleOrDefault().Logo,
+                                LocationDetail = cinemaName.LocationDetail,
+                                Name = cinemaName.Name
+                            }
+                        };
+                        list.Add(_cinemaName);
+                    }
+
+                }
+                return list;
+            }
+            else
+            {
+                var _listCinemaNames = _context.CinemaNames.Select(x => new MessageVM
+                {
+                    Message = "Lấy dữ liệu thành công",
+                    Data = new CinemaNameVM
+                    {
+                        Id = x.Id,
+                        CinemaTypeId = x.CinemaTypeId,
+                        Logo = _context.CinemaTypes.Where(y => y.Id == x.CinemaTypeId).SingleOrDefault().Logo,
+                        LocationId = x.Id,
+                        Name = x.Name,
+                        LocationDetail = x.LocationDetail
+                    }
+                }).ToList();
+
+                return _listCinemaNames;
+            }
+        }
     }
 }

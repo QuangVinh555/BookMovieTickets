@@ -59,6 +59,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/cinemaName/bymovie")]
+        public IActionResult GetByMovieId(int locationId, int cinemaTypeId, int movieId)
+        {
+            try
+            {
+                return Ok(_cinemaNameRepository.GetByMovieId(locationId, cinemaTypeId, movieId));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateCinemaName(CinemaNameDTO dto, int id)
         {

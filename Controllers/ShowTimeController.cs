@@ -60,12 +60,12 @@ namespace BookMovieTickets.Controllers
             }
         }
 
-        [HttpGet("movie/{movie_id}")]
-        public IActionResult GetByMovieId(int movie_id)
+        [HttpGet("movie")]
+        public IActionResult GetByMovieId(int movieId, int locationId, DateTime date, int cinemaTypeId)
         {
             try
             {
-                return Ok(_showTimeRepository.GetByMovieId(movie_id));
+                return Ok(_showTimeRepository.GetByMovieId(movieId, locationId, date, cinemaTypeId));
             }
             catch
             {

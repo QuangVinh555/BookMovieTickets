@@ -202,46 +202,95 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public List<MessageVM> GetByMovieId(int movie_id)
+        public List<MessageVM> GetByMovieId(int movieId, int locationId, DateTime date, int cinemaTypeId)
         {
-            var _listShowTimes = _context.ShowTimes.Where(x => x.MovieId == movie_id && x.Deleted == false).ToList();
             List<MessageVM> list = new List<MessageVM>();
-            if (_listShowTimes.Count > 0)
+            // TH cả 4
+            if(cinemaTypeId != 0)
             {
-                foreach (var item in _listShowTimes)
+                var _listCinemaNames = _context.CinemaNames
+                    .Where(x => x.LocationId == locationId && x.CinemaTypeId == cinemaTypeId)
+                    .ToList();
+                foreach (var cinemaName in _listCinemaNames)
                 {
-                    var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
-                    var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
-                    var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
-                    var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
-                    var _showTime = new MessageVM
+                    var _listShowTimes = _context.ShowTimes
+                        .Where(x => x.MovieId == movieId && x.ShowDate == date && x.CinemaNameId == cinemaName.Id)
+                        .ToList();
+                    foreach (var item in _listShowTimes)
                     {
-                        Message = "Lấy dữ liệu thành công",
-                        Data = new ShowTimeVM
+                        var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
+                        var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                        var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                        var _banner = _context.Banners.Where(x => x.MovieId == _movie.Id).SingleOrDefault();
+                        var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+                        var showTime = new MessageVM
                         {
-                            Id = item.Id,
-                            Location = _location.Province,
-                            CinemaType = _cinemaType.Name,
-                            CinemaName = _cinemaName.Name,
-                            LocationDetail = _cinemaName.LocationDetail,
-                            Movie = _movie.Name,
-                            ShowDate = item.ShowDate,
-                            TicketPrice = item.TicketPrice,
-                            NumTicket = item.NumTicket,
-                            Role = item.Role
-                        }
-                    };
-                    list.Add(_showTime);
+                            Data = new ShowTimeVM
+                            {
+                                Id = item.Id,
+                                CinemaName = _cinemaName.Name,
+                                LocationDetail = _cinemaName.LocationDetail,
+                                Logo = _cinemaType.Logo,
+                                Location = _location.Province,
+                                CinemaType = _cinemaType.Name,
+                                Name = _movie.Name,
+                                MainSlide = _banner.MainSlide,
+                                Category = _movie.Category,
+                                Author = _movie.Author,
+                                ShowDate = item.ShowDate,
+                                TicketPrice = item.TicketPrice,
+                                NumTicket = item.NumTicket,
+                                Stamp = _movie.Stamp,
+                                Role = item.Role
+                            }
+                        };
+                        list.Add(showTime);
+                    }
                 }
                 return list;
             }
+            // TH cả 3
             else
             {
-                var error = new MessageVM
+                var _listCinemaNames = _context.CinemaNames
+                    .Where(x => x.LocationId == locationId)
+                    .ToList();
+                foreach (var cinemaName in _listCinemaNames)
                 {
-                    Message = "Không tìm thấy thông tin của phim này trong suất chiếu này!",
-                };
-                list.Add(error);
+                    var _listShowTimes = _context.ShowTimes
+                        .Where(x => x.MovieId == movieId && x.ShowDate == date && x.CinemaNameId == cinemaName.Id)
+                        .ToList();
+                    foreach (var item in _listShowTimes)
+                    {
+                        var _cinemaName = _context.CinemaNames.Where(x => x.Id == item.CinemaNameId).SingleOrDefault();
+                        var _cinemaType = _context.CinemaTypes.Where(x => x.Id == _cinemaName.CinemaTypeId).SingleOrDefault();
+                        var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                        var _banner = _context.Banners.Where(x => x.MovieId == _movie.Id).SingleOrDefault();
+                        var _location = _context.Locations.Where(x => x.Id == _cinemaName.LocationId).SingleOrDefault();
+                        var showTime = new MessageVM
+                        {
+                            Data = new ShowTimeVM
+                            {
+                                Id = item.Id,
+                                CinemaName = _cinemaName.Name,
+                                LocationDetail = _cinemaName.LocationDetail,
+                                Logo = _cinemaType.Logo,
+                                Location = _location.Province,
+                                CinemaType = _cinemaType.Name,
+                                Name = _movie.Name,
+                                MainSlide = _banner.MainSlide,
+                                Category = _movie.Category,
+                                Author = _movie.Author,
+                                ShowDate = item.ShowDate,
+                                TicketPrice = item.TicketPrice,
+                                NumTicket = item.NumTicket,
+                                Stamp = _movie.Stamp,
+                                Role = item.Role
+                            }
+                        };
+                        list.Add(showTime);
+                    }
+                }
                 return list;
             }
         }

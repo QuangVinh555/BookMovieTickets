@@ -11,7 +11,7 @@ namespace BookMovieTickets.Services
     {
         List<MessageVM> GetAll();
         MessageVM GetById(int id);
-        List<MessageVM> GetByMovieId(int movie_id);
+        List<MessageVM> GetByMovieId(int movie_id, int locationId, DateTime date, int cinemaTypeId);
         List<MessageVM> GetByCinemaNameIdAndDate(int cinemaName_id, DateTime date);
         MessageVM CreateShowTime(ShowTimeDTO dto);
         MessageVM UpdateShowTime(ShowTimeDTO dto);

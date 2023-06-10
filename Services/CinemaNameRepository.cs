@@ -330,7 +330,7 @@ namespace BookMovieTickets.Services
             }
         }
 
-        public List<MessageVM> GetByMovieId(int? locationId, int? cinemaTypeId, int movieId)
+        public List<MessageVM> GetByMovieId(int? locationId, int? cinemaTypeId, int movieId, DateTime date)
         {
             List<MessageVM> list = new List<MessageVM>();
             if(locationId != 0 && cinemaTypeId != 0)
@@ -338,7 +338,7 @@ namespace BookMovieTickets.Services
                 var _cinemaNames = _context.CinemaNames.Where(x => x.LocationId == locationId && x.CinemaTypeId == cinemaTypeId).ToList();
                 foreach (var item in _cinemaNames)
                 {
-                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId && x.ShowDate == date).SingleOrDefault();
                     if(_showTime != null)
                     {
                         var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
@@ -367,7 +367,7 @@ namespace BookMovieTickets.Services
                 var _cinemaNames = _context.CinemaNames.Where(x => x.LocationId == locationId).ToList();
                 foreach (var item in _cinemaNames)
                 {
-                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId && x.ShowDate == date).SingleOrDefault();
                     if (_showTime != null)
                     {
                         var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
@@ -397,7 +397,7 @@ namespace BookMovieTickets.Services
                 var _cinemaNames = _context.CinemaNames.Where(x => x.CinemaTypeId == cinemaTypeId).ToList();
                 foreach (var item in _cinemaNames)
                 {
-                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId).SingleOrDefault();
+                    var _showTime = _context.ShowTimes.Where(x => x.CinemaNameId == item.Id && x.MovieId == movieId && x.ShowDate == date).SingleOrDefault();
                     if (_showTime != null)
                     {
                         var cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();

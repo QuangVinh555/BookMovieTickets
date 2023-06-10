@@ -151,6 +151,7 @@ namespace BookMovieTickets.Services
                     Id = x.Id,
                     ShowTimeId = x.ShowTimeId,
                     CinemaRoomId = x.CinemaRoomId,
+                    CinemaRoom = _context.CinemaRooms.Where(y => y.Id == x.CinemaRoomId).SingleOrDefault().Name,
                     Time = x.Time,
                     EndTime = x.EndTime
                 });

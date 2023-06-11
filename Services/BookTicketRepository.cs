@@ -517,42 +517,43 @@ namespace BookMovieTickets.Services
 
         public List<MessageVM> GetBookTicketByUserId(int page, int userId)
         {
-            var tickets = _context.BookTickets.Where(x => x.UserId == userId).ToList();
-            int dem = 0;
-            double? totalAll = 0;
-            foreach (var item in tickets)
-            {
-                dem++;
-                totalAll = totalAll + item.TotalPrice;
-            }
-            var _listTickets = _context.BookTickets.Where(x => x.UserId == userId).Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE).ToList();
-            List<MessageVM> list = new List<MessageVM>();
-            foreach (var item in _listTickets)
-            {
-                var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
-                var _showTime = _context.ShowTimes.Where(x => x.Id == item.ShowTimeId).SingleOrDefault();
-                var _cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
-                var _hourTime = _context.HourTimes.Where(x => x.Id == item.HourTimeId).SingleOrDefault();
-                var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
-
-                var ticket = new MessageVM
+                var tickets = _context.BookTickets.Where(x => x.UserId == userId && x.State == true).ToList();
+                int dem = 0;
+                double? totalAll = 0;
+                foreach (var item in tickets)
                 {
-                    TotalPage = dem,
-                    Data = new BookTicketVM
+                    dem++;
+                    totalAll = totalAll + item.TotalPrice;
+                }
+                var _listTickets = _context.BookTickets.Where(x => x.UserId == userId && x.State == true).Skip((int)((page - 1) * PAGE_SIZE)).Take(PAGE_SIZE).ToList();
+                List<MessageVM> list = new List<MessageVM>();
+                foreach (var item in _listTickets)
+                {
+                    var _movie = _context.Movies.Where(x => x.Id == item.MovieId).SingleOrDefault();
+                    var _showTime = _context.ShowTimes.Where(x => x.Id == item.ShowTimeId).SingleOrDefault();
+                    var _cinemaName = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
+                    var _hourTime = _context.HourTimes.Where(x => x.Id == item.HourTimeId).SingleOrDefault();
+                    var _cinemaRoom = _context.CinemaRooms.Where(x => x.Id == _hourTime.CinemaRoomId).SingleOrDefault();
+
+                    var ticket = new MessageVM
                     {
-                        Id = item.Id,
-                        CreatedAt = item.CreatedAt,
-                        Movie = _movie.Name,
-                        CinemaName = _cinemaName.Name,
-                        CinemaRoom = _cinemaRoom.Name,
-                        HourTimeStart = _hourTime.Time,
-                        Total = item.TotalPrice,
-                        TotalAll = totalAll,
-                    }
-                };
-                list.Add(ticket);
-            }
-            return list;
+                        TotalPage = dem,
+                        Data = new BookTicketVM
+                        {
+                            Id = item.Id,
+                            CreatedAt = item.CreatedAt,
+                            Movie = _movie.Name,
+                            CinemaName = _cinemaName.Name,
+                            CinemaRoom = _cinemaRoom.Name,
+                            HourTimeStart = _hourTime.Time,
+                            Total = item.TotalPrice,
+                            TotalAll = totalAll,
+                        }
+                    };
+                    list.Add(ticket);
+                }
+                return list;
+       
         }
     }
 }

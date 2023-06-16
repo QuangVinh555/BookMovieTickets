@@ -12,7 +12,7 @@ namespace BookMovieTickets.Services
         public void MailSenders(string email, string body, string header)
         {
             string username = "voquangvinh555@gmail.com";
-            string password = "nzyjjvqkdzsxdsdy";
+            string password = "dgxfkioyftadixyh";
             // Thiết lập thông tin máy chủ SMTP
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.EnableSsl = true;

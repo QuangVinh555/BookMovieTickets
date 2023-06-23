@@ -1,9 +1,16 @@
 ﻿using BookMovieTickets.Data;
 using BookMovieTickets.Models;
 using BookMovieTickets.Views;
+using Newtonsoft.Json;
+using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace BookMovieTickets.Services
@@ -383,85 +390,71 @@ namespace BookMovieTickets.Services
                         }
                         // Gửi mail
                         MailSender mailSender = new MailSender();
-                        //string htmlBody = "<html><body>"
-                        // + "<h1 style=\"color: blue;\"> Đặt vé thành công </h1>"
-                        // + "<p style=\"font-weight: 700;\">Xin chào " + FullName + "</p>"
-                        // + "<p>Cảm ơn bạn đã sử dụng dịch vụ của MoVeek!</p>"
-                        // + "<p>MoVeek xác nhận bạn đã đặt vé xem phim của " + CinemaName.Name + " thành công lúc " + _bookTicket.UpdatedAt + ".</p>"
-                        // + "<p>Chi tiết vé của bạn như sau:</p>"
-                        // + "<div style=\"padding-bottom: 50px;\"></div>"
-                        // + "<p>Mã đặt vé: " + _bookTicket.Id + "</p>"
-                        // + "<p style=\"color: #727272;\">Thời gian chiếu:</p>"
-                        // + "<p>" + HourTime.Time + " " + ShowTime.ShowDate + "</p>"
-                        // + "<h2>Phim: " + Movie.Name + "</h2>"
-                        // + "<div>"
-                        // + "<p style=\"color: #727272;\">Phòng chiếu: </p>"
-                        // + "<p>" + CinemaRoom.Name + "</p>"
-                        // + "<p style=\"color: #727272; margin-left: 15px;\">Số vé: </p>"
-                        // + "<p>" + dem + "</p>"
-                        // + "<p style=\"color: #727272; margin-left: 15px;\">Số ghế: </p>";
 
-                        //foreach (var item in _listTicketDetails)
+                        //var bookTicketQR = new BookTicketEmailVM
                         //{
-                        //            var Chair = _context.Chairs.Where(x => x.Id == item.ChairId).SingleOrDefault().Name;
-                        //            htmlBody += "<p>" + Chair + " , " + "</p>";
-                        //}
+                        //    Id = _bookTicket.Id,
+                        //    UserName = _context.Users.Where(x => x.Id == _bookTicket.UserId).SingleOrDefault().Fullname,
+                        //    Movie = _context.Movies.Where(x => x.Id == _bookTicket.MovieId).SingleOrDefault().Name,
+                        //    ShowTime = _context.ShowTimes.Where(x => x.Id == _bookTicket.ShowTimeId).SingleOrDefault().ShowDate,
+                        //    CreatedAt = _bookTicket.CreatedAt,
 
-                        //htmlBody += "</div>"
+                        //};
 
-                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
-                        //+ "<p style=\"color: #727272;\" >Combo Bắp-Nước</p>"
-                        //+ (NameCombo != "" ? "<p> " + NameCombo + "</p>" : "<p>Không</p>")
-                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
-                        //+ "<p style=\"color: #727272;\" >Rạp chiếu</p>"
-                        //+ "<p style=\"font-weight: 700;\">" + CinemaName.Name + "</p>"
-                        //+ "<p>" + CinemaName.LocationDetail + "</p>"
-                        //+ "<div style=\"padding-bottom: 1px solid #ccc;\" ></div>"
-                        //+ "<div style=\"display: flex; align-items: center; background-color: #f0f0f0;\">"
-                        //+ "<p style=\"color: #727272; padding: 22px\">Tổng tiền </p>"
-                        //+ "<p >" + _bookTicket.TotalPrice + "</p>"
-                        //+ "</div>"
-                        //+ "</body></html>";
+                        //// Tạo mã QR từ dữ liệu cần nhúng
+                        //string qrCodeDataString = JsonConvert.SerializeObject(bookTicketQR); // Thay thế bằng dữ liệu thích hợp
+                        //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                        //QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodeDataString, QRCodeGenerator.ECCLevel.Q);
+                        //QRCode qrCode = new QRCode(qrCodeData);
+                        //Bitmap qrCodeImage = qrCode.GetGraphic(20); // Kích thước 20x20 pixel
+
+                        //string qrCodeImageFileName = Guid.NewGuid().ToString() + ".png";
+                        //string qrCodeImagePath = Path.Combine(@"D:\GTVT PH TPHCM\Đồ án tốt nghiệp\source code\frontend\book-movie-tickets\public\image", qrCodeImageFileName);
+                        //qrCodeImage.Save(qrCodeImagePath, ImageFormat.Png);
+                        //string qrCodeImageUrl = "http"+"://localhost:3000/image/"+qrCodeImageFileName;
+                   
+
                         string htmlBody = "<html><body>"
-                     + "<h1 style=\"color: blue;\"> Đặt vé thành công </h1>"
-                     + "<p style=\"font-weight: 700;\">Xin chào " + FullName + "</p>"
-                     + "<p>Cảm ơn bạn đã sử dụng dịch vụ của MoVeek!</p>"
-                     + "<p>MoVeek xác nhận bạn đã đặt vé xem phim của " + CinemaName.Name + " thành công lúc " + _bookTicket.UpdatedAt + ".</p>"
-                     + "<p>Chi tiết vé của bạn như sau:</p>"
-                     + "<div style=\"padding-bottom: 50px;\"></div>"
-                     + "<p>Mã đặt vé: " + _bookTicket.Id + "</p>"
-                     + "<p style=\"color: #727272;\">Thời gian chiếu:</p>"
-                     + "<p>" + HourTime.Time + " " + ShowTime.ShowDate + "</p>"
-                     + "<h2>Phim: " + Movie.Name + "</h2>"
-                     + "<div>"
-                     + "<p style=\"color: #727272;\">Phòng chiếu: </p>"
-                     + "<p>" + CinemaRoom.Name + "</p>"
-                     + "<p style=\"color: #727272;\">Số vé: </p>"
-                     + "<p>" + dem + "</p>"
-                     + "<p style=\"color: #727272;\">Số ghế: </p>";
+                         + "<h1 style=\"color: blue;\"> Đặt vé thành công </h1>"
+                         + "<p style=\"font-weight: 700;\">Xin chào " + FullName + "</p>"
+                         + "<p>Cảm ơn bạn đã sử dụng dịch vụ của MoVeek!</p>"
+                         + "<p>MoVeek xác nhận bạn đã đặt vé xem phim của " + CinemaName.Name + " thành công lúc " + _bookTicket.UpdatedAt + ".</p>"
+                         + "<p>Chi tiết vé của bạn như sau:</p>"
+                         + "<div style=\"padding-bottom: 50px;\"></div>"
+                         //+ "<img src=\"" + qrCodeImageUrl + "\" alt='QR Code' />" // Bao quanh qrCodeImageUrl bằng dấu nháy kép
+                         + "<p>Mã đặt vé: " + _bookTicket.Id + "</p>"
+                         + "<p style=\"color: #727272;\">Thời gian chiếu:</p>"
+                         + "<p>" + HourTime.Time + " " + ShowTime.ShowDate + "</p>"
+                         + "<h2>Phim: " + Movie.Name + "</h2>"
+                         + "<div>"
+                         + "<p style=\"color: #727272;\">Phòng chiếu: </p>"
+                         + "<p>" + CinemaRoom.Name + "</p>"
+                         + "<p style=\"color: #727272;\">Số vé: </p>"
+                         + "<p>" + dem + "</p>"
+                         + "<p style=\"color: #727272;\">Số ghế: </p>";
 
-                        foreach (var item in _listTicketDetails)
-                        {
-                            var Chair = _context.Chairs.SingleOrDefault(x => x.Id == item.ChairId)?.Name;
-                            htmlBody += "<p>" + Chair + "</p>";
-                        }
+                            foreach (var item in _listTicketDetails)
+                            {
+                                var Chair = _context.Chairs.SingleOrDefault(x => x.Id == item.ChairId)?.Name;
+                                htmlBody += "<p>" + Chair + "</p>";
+                            }
 
-                        htmlBody += "</div>"
-                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
-                                    + "<p style=\"color: #727272;\">Combo Bắp-Nước</p>"
-                                    + (NameCombo != "" ? "<p> " + NameCombo + "</p>" : "<p>Không</p>")
-                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
-                                    + "<p style=\"color: #727272;\">Rạp chiếu</p>"
-                                    + "<p style=\"font-weight: 700;\">" + CinemaName.Name + "</p>"
-                                    + "<p>" + CinemaName.LocationDetail + "</p>"
-                                    + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
-                                    + "<div style=\"display: flex; padding: 22px; align-items: center; background-color: #f0f0f0;\">"
-                                    + "<p style=\"color: #727272;\">Tổng tiền </p>"
-                                    + "<p style=\"margin-left: 20px;\">" + _bookTicket.TotalPrice + "</p>"
-                                    + "</div>"
-                                    + "</body></html>";
+                            htmlBody += "</div>"
+                                        + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                        + "<p style=\"color: #727272;\">Combo Bắp-Nước</p>"
+                                        + (NameCombo != "" ? "<p> " + NameCombo + "</p>" : "<p>Không</p>")
+                                        + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                        + "<p style=\"color: #727272;\">Rạp chiếu</p>"
+                                        + "<p style=\"font-weight: 700;\">" + CinemaName.Name + "</p>"
+                                        + "<p>" + CinemaName.LocationDetail + "</p>"
+                                        + "<div style=\"padding-bottom: 1px solid #ccc;\"></div>"
+                                        + "<div style=\"display: flex; padding: 22px; align-items: center; background-color: #f0f0f0;\">"
+                                        + "<p style=\"color: #727272;\">Tổng tiền </p>"
+                                        + "<p style=\"margin-left: 20px;\">" + _bookTicket.TotalPrice + "</p>"
+                                        + "</div>"
+                                        + "</body></html>";
 
-                        mailSender.MailSenders(_user.Email, htmlBody, "Vé xem phim");
+                            mailSender.MailSenders(_user.Email, htmlBody, "Vé xem phim");
 
                         //var _nameCinema = _context.CinemaNames.Where(x => x.Id == _showTime.CinemaNameId).SingleOrDefault();
                         return new MessageVM

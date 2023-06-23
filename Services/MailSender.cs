@@ -1,5 +1,9 @@
-﻿using System;
+﻿using QRCoder;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -26,6 +30,7 @@ namespace BookMovieTickets.Services
             mailMessage.Subject = header;
             mailMessage.IsBodyHtml = true;
             mailMessage.Body = body;
+
             // Gửi email
             client.Send(mailMessage);
         }

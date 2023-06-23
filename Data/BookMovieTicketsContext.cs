@@ -40,6 +40,8 @@ namespace BookMovieTickets.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserPoint> UserPoints { get; set; }
         public virtual DbSet<UserRank> UserRanks { get; set; }
+        public virtual DbSet<DashBoard> DashBoards { get; set; }
+        public virtual DbSet<DashBoardByCinemaName> DashBoardByCinemaNames { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -758,6 +760,15 @@ namespace BookMovieTickets.Data
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
                     .HasColumnName("name");
+            });
+
+            modelBuilder.Entity<DashBoard>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<DashBoardByCinemaName>(entity =>
+            {
+                entity.HasNoKey();
             });
 
             OnModelCreatingPartial(modelBuilder);

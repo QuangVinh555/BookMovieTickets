@@ -272,6 +272,47 @@ namespace BookMovieTickets.Services
             return list;
         }
 
+        public List<MessageVM> GetMovieTopRaiting()
+        {
+            var _movies = _context.Movies
+                .OrderByDescending(x => x.TotalPercent)
+                .Take(4)
+                .ToList();
+
+            List<MessageVM> list = new List<MessageVM>();
+            foreach (var x in _movies)
+            {
+                    var _banner = _context.Banners.Where(y => y.MovieId == x.Id).SingleOrDefault();
+                    var _movie = new MessageVM
+                    {
+                        Message = "Lấy dữ liệu thành công",
+                        Data = new MovieVM
+                        {
+                            Id = x.Id,
+                            UserId = x.UserId,
+                            Name = x.Name,
+                            Description = x.Description,
+                            Content = x.Content,
+                            Stamp = x.Stamp,
+                            Nation = x.Nation,
+                            MovieDuration = x.MovieDuration,
+                            PremiereDate = x.PremiereDate,
+                            PremiereYear = x.PremiereYear,
+                            Author = x.Author,
+                            Actor = x.Actor,
+                            Producer = x.Producer,
+                            Category = x.Category,
+                            TotalPercent = x.TotalPercent,
+                            LinkTrailer = x.LinkTrailer,
+                            MainSlide = _banner != null ? _banner.MainSlide : "",
+                            ContainerSlide = _banner != null ? _banner.ContainerSlide : ""
+                        }
+                    };
+                    list.Add(_movie);
+            }
+            return list;
+        }
+
         public MessageVM UpdateMovie(MovieDTO dto, int id)
         {
             var _movie = _context.Movies.Where(x => x.Id == id && x.Deleted == false).SingleOrDefault();

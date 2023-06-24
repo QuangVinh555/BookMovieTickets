@@ -85,6 +85,19 @@ namespace BookMovieTickets.Controllers
             }
         }
 
+        [HttpGet("/api/movie/topRating")]
+        public IActionResult GetMovieTopRating()
+        {
+            try
+            {
+                return Ok(_movieRepository.GetMovieTopRaiting());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateMovie(MovieDTO dto, int id)
         {
